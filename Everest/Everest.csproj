@@ -42,11 +42,13 @@
     <Compile Include="Headers\AddCustomRequestHeaders.cs" />
     <Compile Include="Auth\BasicAuth.cs" />
     <Compile Include="Content\BodyContent.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="Response.cs" />
     <Compile Include="Status\EnsureAcceptableResponseStatus.cs" />
     <Compile Include="Status\ExpectStatus.cs" />
     <Compile Include="Status\ExpectStatusInRange.cs" />
     <Compile Include="Status\ExpectStatusNotInRange.cs" />
-    <Compile Include="HttpResource.cs" />
+    <Compile Include="SubordinateResource.cs" />
     <Compile Include="Caching\IfModifiedSince.cs" />
     <Compile Include="Content\JsonBodyContent.cs" />
     <Compile Include="Pipeline\PipelineElement.cs" />

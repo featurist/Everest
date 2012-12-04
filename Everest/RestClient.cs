@@ -11,7 +11,7 @@ using Everest.Status;
 
 namespace Everest
 {
-    public class RestClient
+    public class RestClient : Resource
     {
         private readonly HttpClient _client = new HttpClient();
         
@@ -51,42 +51,42 @@ namespace Everest
                 .Aggregate(uri, (resolved, prop) => resolved.Replace("{" + prop.Name + "}", prop.GetValue(arguments, null).ToString()));
         }
 
-        public HttpResource Get(string uri, params PipelineOption[] pipelineOptions)
+        public Response Get(string uri, params PipelineOption[] pipelineOptions)
         {
             return Send(HttpMethod.Get, uri, null, pipelineOptions);
         }
 
-        public HttpResource Get(string uri, IDictionary<string, string> headers, params PipelineOption[] options)
+        public Response Get(string uri, IDictionary<string, string> headers, params PipelineOption[] options)
         {
             return Get(uri, options.Union(new[] {new SetRequestHeaders(headers)}).ToArray());
         }
 
-        public HttpResource Post(string url, string body, params PipelineOption[] pipelineOptions)
+        public Response Post(string url, string body, params PipelineOption[] pipelineOptions)
         {
             return Send(HttpMethod.Post, url, new StringBodyContent(body), pipelineOptions);
         }
 
-        public HttpResource Put(string uri, string body, params PipelineOption[] pipelineOptions)
+        public Response Put(string uri, string body, params PipelineOption[] pipelineOptions)
         {
             return Send(HttpMethod.Put, uri, new StringBodyContent(body), pipelineOptions);
         }
 
-        public HttpResource Put(string uri, BodyContent body, params PipelineOption[] pipelineOptions)
+        public Response Put(string uri, BodyContent body, params PipelineOption[] pipelineOptions)
         {
             return Send(HttpMethod.Put, uri, body, pipelineOptions);
         }
 
-        public HttpResource Head(string uri, params PipelineOption[] pipelineOptions)
+        public Response Head(string uri, params PipelineOption[] pipelineOptions)
         {
             return Send(HttpMethod.Head, uri, null, pipelineOptions);
         }
 
-        public HttpResource Delete(string uri, params PipelineOption[] pipelineOptions)
+        public Response Delete(string uri, params PipelineOption[] pipelineOptions)
         {
             return Send(HttpMethod.Delete, uri, null, pipelineOptions);
         }
 
-        private HttpResource Send(HttpMethod method, string uri, BodyContent body, params PipelineOption[] overridingPipelineOptions)
+        public Response Send(HttpMethod method, string uri, BodyContent body, params PipelineOption[] overridingPipelineOptions)
         {
             var options = new PipelineOptions(_ambientPipelineOptions.Concat(overridingPipelineOptions));
 
@@ -105,7 +105,7 @@ namespace Everest
 
             options.AssertAllOptionsWereUsed();
 
-            return new HttpResource(response, response.RequestMessage.RequestUri, _ambientPipelineOptions);
+            return new SubordinateResource(response, response.RequestMessage.RequestUri, _ambientPipelineOptions);
         }
 
         private void ApplyPipelineToRequest(HttpRequestMessage request, PipelineOptions options)

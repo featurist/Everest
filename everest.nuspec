@@ -2,13 +2,13 @@
 <package>
   <metadata>
     <id>Everest</id>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>Added some interfaces</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>http</tags>
   </metadata>

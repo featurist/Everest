@@ -7,11 +7,12 @@ using Everest.Pipeline;
 
 namespace Everest
 {
-    public class HttpResource : RestClient
+    internal class SubordinateResource : RestClient, Response
     {
         private readonly HttpResponseMessage _httpResponseMessage;
 
-        public HttpResource(HttpResponseMessage httpResponseMessage, Uri url, IEnumerable<PipelineOption> ambientPipelineOptions) : base(url, ambientPipelineOptions)
+        public SubordinateResource(HttpResponseMessage httpResponseMessage, Uri url, IEnumerable<PipelineOption> ambientPipelineOptions)
+            : base(url, ambientPipelineOptions)
         {
             _httpResponseMessage = httpResponseMessage;
         }
@@ -33,10 +34,7 @@ namespace Everest
 
         public string ContentType
         {
-            get
-            {
-                return _httpResponseMessage.Content.Headers.ContentType == null ? null : _httpResponseMessage.Content.Headers.ContentType.MediaType;
-            }
+            get { return _httpResponseMessage.Content.Headers.ContentType == null ? null : _httpResponseMessage.Content.Headers.ContentType.MediaType; }
         }
 
         public HttpStatusCode StatusCode
