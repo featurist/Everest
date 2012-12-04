@@ -1,0 +1,6 @@
+_ReSharper.*
+*.suo
+*.sln.DotSettings
+*/obj
+*/bin
+packages
