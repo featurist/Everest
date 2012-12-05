@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Xml.Linq;
 
 namespace Everest
 {
@@ -8,7 +7,6 @@ namespace Everest
     {
         string Body { get; }
         byte[] BodyAsByteArray { get; }
-        XDocument BodyAsXml { get; }
         string ContentType { get; }
         HttpStatusCode StatusCode { get; }
         DateTimeOffset? LastModified { get; }

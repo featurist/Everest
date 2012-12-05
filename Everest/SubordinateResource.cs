@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Xml.Linq;
 using Everest.Pipeline;
 
 namespace Everest
@@ -25,11 +24,6 @@ namespace Everest
         public byte[] BodyAsByteArray
         {
             get { return _httpResponseMessage.Content.ReadAsByteArrayAsync().Result; }
-        }
-
-        public XDocument BodyAsXml
-        {
-            get { return XDocument.Parse(Body); }
         }
 
         public string ContentType

@@ -137,6 +137,15 @@ namespace Everest.UnitTests
             Assert.That(secondResponse.Body, Is.EqualTo(""));
         }
 
+        [Test]
+        public void ProvidesAConvenientWayToSetAcceptHeader()
+        {
+            _server.OnGet("/accept").Respond((req, res) => res.Body = req.Headers["Accept"]);
+            var client = new RestClient();
+            var response = client.Get(BaseAddress + "/accept", new Accept("foo/bar"));
+            Assert.That(response.Body, Is.EqualTo("foo/bar"));
+        }
+
         private class BogusOption : PipelineOption
         {
         }
