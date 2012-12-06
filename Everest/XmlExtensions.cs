@@ -2,7 +2,7 @@
 
 namespace Everest
 {
-    public static class Extensions
+    public static class XmlExtensions
     {
         public static XDocument BodyAsXml(this Response response)
         {

@@ -39,7 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth\AddBasicAuthHeaders.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="ResourceApi.cs" />
+    <Compile Include="XmlExtensions.cs" />
     <Compile Include="Headers\Accept.cs" />
     <Compile Include="Headers\AddCustomRequestHeaders.cs" />
     <Compile Include="Auth\BasicAuth.cs" />

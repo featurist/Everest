@@ -51,41 +51,6 @@ namespace Everest
                 .Aggregate(uri, (resolved, prop) => resolved.Replace("{" + prop.Name + "}", prop.GetValue(arguments, null).ToString()));
         }
 
-        public Response Get(string uri, params PipelineOption[] pipelineOptions)
-        {
-            return Send(HttpMethod.Get, uri, null, pipelineOptions);
-        }
-
-        public Response Get(string uri, IDictionary<string, string> headers, params PipelineOption[] options)
-        {
-            return Get(uri, options.Union(new[] {new SetRequestHeaders(headers)}).ToArray());
-        }
-
-        public Response Post(string url, string body, params PipelineOption[] pipelineOptions)
-        {
-            return Send(HttpMethod.Post, url, new StringBodyContent(body), pipelineOptions);
-        }
-
-        public Response Put(string uri, string body, params PipelineOption[] pipelineOptions)
-        {
-            return Send(HttpMethod.Put, uri, new StringBodyContent(body), pipelineOptions);
-        }
-
-        public Response Put(string uri, BodyContent body, params PipelineOption[] pipelineOptions)
-        {
-            return Send(HttpMethod.Put, uri, body, pipelineOptions);
-        }
-
-        public Response Head(string uri, params PipelineOption[] pipelineOptions)
-        {
-            return Send(HttpMethod.Head, uri, null, pipelineOptions);
-        }
-
-        public Response Delete(string uri, params PipelineOption[] pipelineOptions)
-        {
-            return Send(HttpMethod.Delete, uri, null, pipelineOptions);
-        }
-
         public Response Send(HttpMethod method, string uri, BodyContent body, params PipelineOption[] overridingPipelineOptions)
         {
             var options = new PipelineOptions(_ambientPipelineOptions.Concat(overridingPipelineOptions));
