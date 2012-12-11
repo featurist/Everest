@@ -19,9 +19,19 @@ namespace Everest
             return resource.Get(uri, options.Union(new[] { new SetRequestHeaders(headers) }).ToArray());
         }
 
+        public static Response Options(this Resource resource, string url, params PipelineOption[] pipelineOptions)
+        {
+            return resource.Send(HttpMethod.Options, url, null, pipelineOptions);
+        }
+
         public static Response Post(this Resource resource, string url, string body, params PipelineOption[] pipelineOptions)
         {
             return resource.Send(HttpMethod.Post, url, new StringBodyContent(body), pipelineOptions);
+        }
+
+        public static Response Post(this Resource resource, string body, params PipelineOption[] pipelineOptions)
+        {
+            return resource.Send(HttpMethod.Post, string.Empty, new StringBodyContent(body), pipelineOptions);
         }
 
         public static Response Put(this Resource resource, string uri, string body, params PipelineOption[] pipelineOptions)
@@ -36,7 +46,7 @@ namespace Everest
 
         public static Response Head(this Resource resource, string uri, params PipelineOption[] pipelineOptions)
         {
-            return resource.Send(HttpMethod.Head, uri, null, pipelineOptions);
+            return resource.Send(HttpMethod.Head, uri, null, pipelineOptions); 
         }
 
         public static Response Delete(this Resource resource, string uri, params PipelineOption[] pipelineOptions)

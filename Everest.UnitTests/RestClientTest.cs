@@ -59,6 +59,14 @@ namespace Everest.UnitTests
         }
 
         [Test]
+        public void MakesOptionsRequests()
+        {
+            _server.OnOptions("/whaa").RespondWith("options!");
+            var body = _client.Options(BaseAddress + "/whaa", ExpectStatus.OK).Body;
+            Assert.That(body, Is.EqualTo("options!"));
+        }
+
+        [Test]
         public void MakesPostRequests()
         {
             _server.OnPost("/foo").RespondWith(requestBody => "posted " + requestBody);
@@ -72,6 +80,16 @@ namespace Everest.UnitTests
             _server.OnHead("/foo").Respond((req, res) => res.StatusCode = 303);
             var response = _client.Head(BaseAddress + "/foo", new ExpectStatus(HttpStatusCode.SeeOther));
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.SeeOther));
+        }
+
+        [Test]
+        public void MakesPostRequestsToSelf()
+        {
+            _server.OnGet("/self").RespondWith("good on ya");
+            _server.OnPost("/self").RespondWith(requestBody => "posted " + requestBody);
+            var response = _client.Get(BaseAddress + "/self");
+            var body = response.Post("body").Body;
+            Assert.That(body, Is.EqualTo("posted body"));
         }
 
         [Test]
