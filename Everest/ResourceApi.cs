@@ -24,14 +24,19 @@ namespace Everest
             return resource.Send(HttpMethod.Options, url, null, pipelineOptions);
         }
 
+        public static Response Post(this Resource resource, string url, BodyContent body, params PipelineOption[] pipelineOptions)
+        {
+            return resource.Send(HttpMethod.Post, url, body, pipelineOptions);
+        }
+
         public static Response Post(this Resource resource, string url, string body, params PipelineOption[] pipelineOptions)
         {
-            return resource.Send(HttpMethod.Post, url, new StringBodyContent(body), pipelineOptions);
+            return resource.Post(url, new StringBodyContent(body), pipelineOptions);
         }
 
         public static Response Post(this Resource resource, string body, params PipelineOption[] pipelineOptions)
         {
-            return resource.Send(HttpMethod.Post, string.Empty, new StringBodyContent(body), pipelineOptions);
+            return resource.Post(string.Empty, new StringBodyContent(body), pipelineOptions);
         }
 
         public static Response Put(this Resource resource, string uri, string body, params PipelineOption[] pipelineOptions)

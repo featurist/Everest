@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using Everest.Content;
 using Everest.Headers;
 using Everest.Pipeline;
 using Everest.Status;
@@ -71,6 +72,14 @@ namespace Everest.UnitTests
         {
             _server.OnPost("/foo").RespondWith(requestBody => "posted " + requestBody);
             var body = _client.Post(BaseAddress + "/foo", "body", ExpectStatus.OK).Body;
+            Assert.That(body, Is.EqualTo("posted body"));
+        }
+
+        [Test]
+        public void MakesPostRequestsWithBodyContent()
+        {
+            _server.OnPost("/foo").RespondWith(requestBody => "posted " + requestBody);
+            var body = _client.Post(BaseAddress + "/foo", new StringBodyContent("body"), ExpectStatus.OK).Body;
             Assert.That(body, Is.EqualTo("posted body"));
         }
 
