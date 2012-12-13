@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Everest.Pipeline;
@@ -9,6 +10,7 @@ namespace Everest
     internal class SubordinateResource : RestClient, Response
     {
         private readonly HttpResponseMessage _httpResponseMessage;
+        private Dictionary<string, string> _headers;
 
         public SubordinateResource(HttpResponseMessage httpResponseMessage, Uri url, IEnumerable<PipelineOption> ambientPipelineOptions)
             : base(url, ambientPipelineOptions)
@@ -51,6 +53,19 @@ namespace Everest
                     return location.ToString();
                 }
                 throw new KeyNotFoundException("There was no location header in response from " + Url);
+            }
+        }
+
+        public IDictionary<string, string> Headers
+        {
+            get
+            {
+                if (_headers == null)
+                {
+                    _headers = _httpResponseMessage.Headers.ToDictionary(header => header.Key, header => String.Join(", ", header.Value));
+                }
+
+                return _headers;
             }
         }
     }

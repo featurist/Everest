@@ -60,6 +60,15 @@ namespace Everest.UnitTests
         }
 
         [Test]
+        public void ExposesResponseHeaders()
+        {
+            _server.OnGet("/whaa").Respond((req, res) => { res.Headers["X-Custom"] = "my custom header"; });
+
+            var response = _client.Get(BaseAddress + "/whaa", ExpectStatus.OK);
+            Assert.That(response.Headers["X-Custom"], Is.EqualTo("my custom header"));
+        }
+
+        [Test]
         public void MakesOptionsRequests()
         {
             _server.OnOptions("/whaa").RespondWith("options!");

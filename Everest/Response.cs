@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Everest
@@ -11,5 +12,6 @@ namespace Everest
         HttpStatusCode StatusCode { get; }
         DateTimeOffset? LastModified { get; }
         string Location { get; }
+        IDictionary<string, string> Headers { get; }
     }
 }
