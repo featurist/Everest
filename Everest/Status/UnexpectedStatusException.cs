@@ -4,7 +4,7 @@ namespace Everest.Status
 {
     public class UnexpectedStatusException : Exception
     {
-        public UnexpectedStatusException(string message) : base(message)
+        public UnexpectedStatusException(int statusCode, string message) : base(message)
         {
         }
     }
