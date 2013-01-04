@@ -5,9 +5,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Everest", "Everest\Everest.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Everest.UnitTests", "Everest.UnitTests\Everest.UnitTests.csproj", "{FB9EB4DC-F591-4697-84FE-6167C408DC3E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BEF6098E-F1AC-43DA-960A-85B4963F87E6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{74523318-B253-4A92-A551-847F981FB594}"
 	ProjectSection(SolutionItems) = preProject
 		everest.nuspec = everest.nuspec
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Global

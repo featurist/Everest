@@ -2,7 +2,11 @@
 <package>
   <metadata>
     <id>Everest</id>
+<<<<<<< HEAD
     <version>0.0.8</version>
+=======
+    <version>0.0.7</version>
+>>>>>>> 6358c25d4b3c3de6de5a27b933138d0ff9689833
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
