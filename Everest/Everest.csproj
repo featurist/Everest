@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Auth\AddBasicAuthHeaders.cs" />
     <Compile Include="ResourceApi.cs" />
+    <Compile Include="Status\UnexpectedStatusException.cs" />
     <Compile Include="XmlExtensions.cs" />
     <Compile Include="Headers\Accept.cs" />
     <Compile Include="Headers\AddCustomRequestHeaders.cs" />

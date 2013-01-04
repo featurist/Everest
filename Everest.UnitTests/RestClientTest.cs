@@ -110,13 +110,13 @@ namespace Everest.UnitTests
         [Test]
         public void GetExpectStatusIsOverridable()
         {
-            Assert.That(() => _client.Get(BaseAddress + "/foo", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.Exception);
+            Assert.That(() => _client.Get(BaseAddress + "/foo", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.InstanceOf<UnexpectedStatusException>());
         }
 
         [Test]
         public void PutExpectStatusIsOverridable()
         {
-            Assert.That(() => _client.Put(BaseAddress + "/foo", "oops", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.Exception);
+            Assert.That(() => _client.Put(BaseAddress + "/foo", "oops", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.InstanceOf<UnexpectedStatusException>());
         }
 
         [Test]

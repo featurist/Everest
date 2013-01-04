@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http;
 using Everest.Pipeline;
 
@@ -21,7 +20,7 @@ namespace Everest.Status
         {
             if (!acceptableStatuses.IsStatusAcceptable(response.StatusCode))
             {
-                throw new Exception(
+                throw new UnexpectedStatusException(
                     string.Format(
                     "{0} {1} -- expected response status to be {2}, got {3}\n\n\n{4}",
                                 response.RequestMessage.Method,
