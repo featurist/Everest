@@ -1,6 +1,7 @@
 _ReSharper.*
 *.suo
 *.sln.DotSettings
+*.sln.DotSettings.user
 */obj
 */bin
 packages

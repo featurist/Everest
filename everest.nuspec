@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
     <releaseNotes>Added exception for unexpected response status</releaseNotes>
-    <copyright>Copyright 2012</copyright>
+    <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>
   <files>
