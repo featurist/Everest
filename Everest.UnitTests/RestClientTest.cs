@@ -69,6 +69,16 @@ namespace Everest.UnitTests
         }
 
         [Test]
+        public void ExposesContentHeadersInTheSameCollectionAsOtherResponseHeaders()
+        {
+            _server.OnGet("/contentType").Respond((req, res) => { res.Headers["Content-Type"] = "x/foo"; });
+
+            var response = _client.Get(BaseAddress + "/contentType");
+            Assert.That(response.Headers.ContainsKey("Content-Type"));
+            Assert.That(response.Headers["Content-Type"], Is.EqualTo("x/foo"));
+        }
+
+        [Test]
         public void MakesOptionsRequests()
         {
             _server.OnOptions("/whaa").RespondWith("options!");

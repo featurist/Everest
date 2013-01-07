@@ -62,9 +62,13 @@ namespace Everest
             {
                 if (_headers == null)
                 {
-                    _headers = _httpResponseMessage.Headers.ToDictionary(header => header.Key, header => String.Join(", ", header.Value));
+                    var allHeaders = new Dictionary<string, string>();
+                    foreach (var header in _httpResponseMessage.Headers.Union(_httpResponseMessage.Content.Headers))
+                    {
+                        allHeaders.Add(header.Key, String.Join(", ", header.Value));
+                    }
+                    _headers = allHeaders;
                 }
-
                 return _headers;
             }
         }

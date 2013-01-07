@@ -2,13 +2,13 @@
 <package>
   <metadata>
     <id>Everest</id>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
-    <releaseNotes>Expose status code in exception for unexpected response status</releaseNotes>
+    <releaseNotes>Fix bug where response headers did not include 'content' headers</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>
