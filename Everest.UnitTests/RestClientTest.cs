@@ -192,6 +192,53 @@ namespace Everest.UnitTests
             Assert.That(response.Body, Is.EqualTo("foo/bar"));
         }
 
+
+        [Test]
+        public void ThrowsWhenExpectedResponseHeaderIsNotSet()
+        {
+            _server.OnGet("/respond-with-bar").Respond((req, res) => res.Headers["unknown"] = "bar");
+            var client = new RestClient(new ExpectResponseHeaders { { "x", "foo" }});
+            try
+            {
+                client.Get(BaseAddress + "/respond-with-bar");
+                Assert.Fail("Expected UnexpectedResponseHeaderException");
+            }
+            catch (UnexpectedResponseHeaderException e)
+            {
+                Assert.That(e.Key, Is.EqualTo("x"));
+                Assert.That(e.ExpectedValue, Is.EqualTo("foo"));
+                Assert.That(e.ActualValue, Is.EqualTo(null));
+                Assert.That(e.Message, Is.EqualTo("Expected response header 'x' to have the value 'foo', but it had the value ''"));
+            }
+        }
+
+        [Test]
+        public void ThrowsWhenExpectedResponseHeaderHasUnexpectedValue()
+        {
+            _server.OnGet("/respond-with-bar").Respond((req, res) => res.Headers["x"] = "bar");
+            var client = new RestClient(new ExpectResponseHeaders { { "x", "foo" }});
+            try
+            {
+                client.Get(BaseAddress + "/respond-with-bar");
+                Assert.Fail("Expected UnexpectedResponseHeaderException");
+            }
+            catch (UnexpectedResponseHeaderException e)
+            {
+                Assert.That(e.Key, Is.EqualTo("x"));
+                Assert.That(e.ExpectedValue, Is.EqualTo("foo"));
+                Assert.That(e.ActualValue, Is.EqualTo("bar"));
+                Assert.That(e.Message, Is.EqualTo("Expected response header 'x' to have the value 'foo', but it had the value 'bar'"));
+            }
+        }
+
+        [Test]
+        public void DoesNotThrowWhenExpectedResponseHeadersAreSetToExpectedValues()
+        {
+            _server.OnGet("/respond-with-foo").Respond((req, res) => res.Headers["x"] = "foo");
+            var client = new RestClient(new ExpectResponseHeaders { { "x", "foo" } });
+            Assert.That(() => client.Get(BaseAddress + "/respond-with-foo"), Throws.Nothing);
+        }
+
         private class BogusOption : PipelineOption
         {
         }

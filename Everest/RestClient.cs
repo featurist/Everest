@@ -19,8 +19,9 @@ namespace Everest
                                                       {
                                                           new AddCustomRequestHeaders(),
                                                           new AddBasicAuthHeaders(),
-                                                          new EnsureAcceptableResponseStatus()
-                                                      };
+                                                          new EnsureAcceptableResponseStatus(),
+                                                          new EnsureAcceptableResponseHeaders()
+                                                      }; 
 
         private static readonly PipelineOption[] DefaultOptions = new PipelineOption[]
                                                                        {

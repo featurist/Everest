@@ -39,6 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth\AddBasicAuthHeaders.cs" />
+    <Compile Include="Headers\EnsureAcceptableResponseHeaders.cs" />
+    <Compile Include="Headers\ExpectResponseHeaders.cs" />
+    <Compile Include="Headers\UnexpectedResponseHeaderException.cs" />
     <Compile Include="ResourceApi.cs" />
     <Compile Include="Status\UnexpectedStatusException.cs" />
     <Compile Include="XmlExtensions.cs" />
