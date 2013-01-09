@@ -22,10 +22,11 @@ namespace Everest.Status
             {
                 throw new UnexpectedStatusException((int)response.StatusCode,
                     string.Format(
-                    "{0} {1} -- expected response status to be {2}, got {3}\n\n\n{4}",
+                    "{0} {1} -- expected response status to be {2}, got {3} ({4})\n\n\n{5}",
                                 response.RequestMessage.Method,
                                 response.RequestMessage.RequestUri.AbsoluteUri,
                                 acceptableStatuses.DescribeAcceptableStatuses(),
+                                (int)response.StatusCode,
                                 response.StatusCode,
                                 response.Content.ReadAsStringAsync().Result));
             }

@@ -123,7 +123,14 @@ namespace Everest.UnitTests
         [Test]
         public void GetExpects200RangeStatusByDefault()
         {
-            Assert.That(() => _client.Get(BaseAddress + "/non-existent"), Throws.Exception);
+            try
+            {
+                _client.Get(BaseAddress + "/non-existent");
+            }
+            catch (UnexpectedStatusException e)
+            {
+                Assert.That(e.Message, Is.EqualTo("GET http://localhost:18745/non-existent -- expected response status to be not in the range 400-599, got 404 (NotFound)\n\n\n"));
+            }
         }
 
         [Test]
