@@ -2,13 +2,13 @@
 <package>
   <metadata>
     <id>Everest</id>
-    <version>0.0.13</version>
+    <version>0.0.14</version>
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
-    <releaseNotes>Expected response headers</releaseNotes>
+    <releaseNotes>Expected response headers includes content headers</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>

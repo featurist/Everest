@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Everest.Pipeline;
@@ -9,27 +9,26 @@ namespace Everest.Headers
     {
         public void ApplyToRequest(HttpRequestMessage request, PipelineOptions pipelineOptions)
         {
-            // Do nothing
         }
 
         public void ApplyToResponse(HttpResponseMessage response, PipelineOptions pipelineOptions)
         {
-            pipelineOptions.Use<ExpectResponseHeaders>(option => AssertResponseHeadersAreExpected(option, response));
+            pipelineOptions.Use<ExpectResponseHeaders>(option => AssertResponseHeadersAreExpected(option, response.AllHeadersAsStrings()));
         }
 
-        private void AssertResponseHeadersAreExpected(ExpectResponseHeaders expectResponseHeaders, HttpResponseMessage response)
+        private static void AssertResponseHeadersAreExpected(IEnumerable<KeyValuePair<string, string>> expectedResponseHeaders, IDictionary<string, string> actualResponseHeaders)
         {
-            foreach (var header in expectResponseHeaders)
+            foreach (var expectedHeader in expectedResponseHeaders)
             {
-                if (!response.Headers.Contains(header.Key))
+                if (!actualResponseHeaders.ContainsKey(expectedHeader.Key))
                 {
-                    throw new UnexpectedResponseHeaderException(header.Key, header.Value);
+                    throw new UnexpectedResponseHeaderException(expectedHeader.Key, expectedHeader.Value);
                 }
 
-                string actualValue = response.Headers.First(h => h.Key == header.Key).Value.FirstOrDefault();
-                if (actualValue != header.Value)
+                var actualValue = actualResponseHeaders.First(h => h.Key == expectedHeader.Key).Value;
+                if (actualValue != expectedHeader.Value)
                 {
-                    throw new UnexpectedResponseHeaderException(header.Key, header.Value, actualValue);
+                    throw new UnexpectedResponseHeaderException(expectedHeader.Key, expectedHeader.Value, actualValue);
                 }
             }
         }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
+using Everest.Headers;
 using Everest.Pipeline;
 
 namespace Everest
@@ -10,7 +10,7 @@ namespace Everest
     internal class SubordinateResource : RestClient, Response
     {
         private readonly HttpResponseMessage _httpResponseMessage;
-        private Dictionary<string, string> _headers;
+        private IDictionary<string, string> _headers;
 
         public SubordinateResource(HttpResponseMessage httpResponseMessage, Uri url, IEnumerable<PipelineOption> ambientPipelineOptions)
             : base(url, ambientPipelineOptions)
@@ -58,19 +58,7 @@ namespace Everest
 
         public IDictionary<string, string> Headers
         {
-            get
-            {
-                if (_headers == null)
-                {
-                    var allHeaders = new Dictionary<string, string>();
-                    foreach (var header in _httpResponseMessage.Headers.Union(_httpResponseMessage.Content.Headers))
-                    {
-                        allHeaders.Add(header.Key, String.Join(", ", header.Value));
-                    }
-                    _headers = allHeaders;
-                }
-                return _headers;
-            }
+            get { return _headers ?? (_headers = _httpResponseMessage.AllHeadersAsStrings()); }
         }
     }
 }
