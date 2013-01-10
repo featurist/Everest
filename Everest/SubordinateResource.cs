@@ -12,8 +12,8 @@ namespace Everest
         private readonly HttpResponseMessage _httpResponseMessage;
         private IDictionary<string, string> _headers;
 
-        public SubordinateResource(HttpResponseMessage httpResponseMessage, Uri url, IEnumerable<PipelineOption> ambientPipelineOptions)
-            : base(url, ambientPipelineOptions)
+        public SubordinateResource(HttpResponseMessage httpResponseMessage, Uri url, HttpClientAdapter adapter, IEnumerable<PipelineOption> ambientPipelineOptions)
+            : base(url, adapter, ambientPipelineOptions)
         {
             _httpResponseMessage = httpResponseMessage;
         }

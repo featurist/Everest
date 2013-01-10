@@ -8,41 +8,43 @@ using Everest.Content;
 using Everest.Headers;
 using Everest.Pipeline;
 using Everest.Status;
+using Everest.SystemNetHttp;
 
 namespace Everest
 {
     public class RestClient : Resource
     {
-        private readonly HttpClient _client = new HttpClient();
-        
         private readonly List<PipelineElement> _pipeline = new List<PipelineElement>
                                                       {
                                                           new AddCustomRequestHeaders(),
                                                           new AddBasicAuthHeaders(),
                                                           new EnsureAcceptableResponseStatus(),
                                                           new EnsureAcceptableResponseHeaders()
-                                                      }; 
+                                                      };
 
-        private static readonly PipelineOption[] DefaultOptions = new PipelineOption[]
-                                                                       {
-                                                                       };
+        private static readonly PipelineOption[] DefaultAmbientOptions = new PipelineOption[] {};
+        private static readonly HttpClientAdapter DefaultAdapter = new SystemNetHttpClientAdapter();
 
         private readonly IEnumerable<PipelineOption> _ambientPipelineOptions;
+        protected readonly HttpClientAdapter Adapter;
 
-        public RestClient() : this(null, DefaultOptions)
+        public RestClient() : this(DefaultAmbientOptions)
         {
         }
 
-        public RestClient(params PipelineOption[] options) : this(null, options)
+        public RestClient(params PipelineOption[] options) : this(null, DefaultAdapter, options)
         {
         }
 
-        protected RestClient(Uri resourceUri, IEnumerable<PipelineOption> ambientPipelineOptions)
+        public RestClient(Uri url, HttpClientAdapter adapter, IEnumerable<PipelineOption> ambientPipelineOptions)
         {
+            Url = url;
+            Adapter = adapter;
             _ambientPipelineOptions = ambientPipelineOptions;
-            Url = resourceUri;
-            _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
+
+        public event EventHandler<RequestEventArgs> Sending;
+        public event EventHandler<ResponseEventArgs> Responded;
 
         public Uri Url { get; private set; }
 
@@ -66,12 +68,27 @@ namespace Everest
             }
             request.RequestUri = absoluteUri;
             request.Method = method;
-            var response = _client.SendAsync(request).Result;
+
+
+            HttpRequestMessageRequestDetails requestDetails = null;
+            if (Sending != null)
+            {
+                requestDetails = new HttpRequestMessageRequestDetails(request);
+                Sending(this, new RequestEventArgs(requestDetails));
+            }
+
+            var response = Adapter.SendAsync(request).Result;
+
+            if (Responded != null)
+            {
+                Responded(this, new ResponseEventArgs(new HttpResponseMessageResponseDetails(requestDetails ?? new HttpRequestMessageRequestDetails(request), response)));
+            }
+
             ApplyPipelineToResponse(response, options);
 
             options.AssertAllOptionsWereUsed();
 
-            return new SubordinateResource(response, response.RequestMessage.RequestUri, _ambientPipelineOptions);
+            return new SubordinateResource(response, response.RequestMessage.RequestUri, Adapter, _ambientPipelineOptions);
         }
 
         private void ApplyPipelineToRequest(HttpRequestMessage request, PipelineOptions options)

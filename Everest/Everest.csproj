@@ -38,13 +38,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpClientAdapter.cs" />
     <Compile Include="Auth\AddBasicAuthHeaders.cs" />
     <Compile Include="Headers\EnsureAcceptableResponseHeaders.cs" />
     <Compile Include="Headers\ExpectResponseHeaders.cs" />
     <Compile Include="Headers\HttpResponseMessageExtensions.cs" />
     <Compile Include="Headers\UnexpectedResponseHeaderException.cs" />
+    <Compile Include="RequestEventArgs.cs" />
+    <Compile Include="ResponseDetails.cs" />
+    <Compile Include="ResponseEventArgs.cs" />
+    <Compile Include="SystemNetHttp\HttpRequestMessageRequestDetails.cs" />
+    <Compile Include="RequestDetails.cs" />
     <Compile Include="ResourceApi.cs" />
     <Compile Include="Status\UnexpectedStatusException.cs" />
+    <Compile Include="SystemNetHttp\HttpResponseMessageResponseDetails.cs" />
+    <Compile Include="SystemNetHttp\SystemNetHttpClientAdapter.cs" />
     <Compile Include="XmlExtensions.cs" />
     <Compile Include="Headers\Accept.cs" />
     <Compile Include="Headers\AddCustomRequestHeaders.cs" />

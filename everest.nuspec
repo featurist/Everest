@@ -2,17 +2,18 @@
 <package>
   <metadata>
     <id>Everest</id>
-    <version>0.0.15</version>
+    <version>0.0.16</version>
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
-    <releaseNotes>Improved error messages</releaseNotes>
+    <releaseNotes>Request and response events</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>
   <files>
     <file src="Everest\bin\Debug\Everest.dll" target="lib\net40" />
+	<file src="Everest\bin\Debug\Everest.pdb" target="lib\net40" />
   </files>
 </package>
