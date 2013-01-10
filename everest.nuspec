@@ -2,18 +2,18 @@
 <package>
   <metadata>
     <id>Everest</id>
-    <version>0.0.16</version>
+    <version>0.0.17</version>
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
-    <releaseNotes>Request and response events</releaseNotes>
+    <releaseNotes>Create a new RestClient from an existing one, builder style</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>
   <files>
     <file src="Everest\bin\Debug\Everest.dll" target="lib\net40" />
-	<file src="Everest\bin\Debug\Everest.pdb" target="lib\net40" />
+	  <file src="Everest\bin\Debug\Everest.pdb" target="lib\net40" />
   </files>
 </package>

@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Headers\RequestHeader.cs" />
     <Compile Include="HttpClientAdapter.cs" />
     <Compile Include="Auth\AddBasicAuthHeaders.cs" />
     <Compile Include="Headers\EnsureAcceptableResponseHeaders.cs" />

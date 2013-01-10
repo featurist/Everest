@@ -53,6 +53,7 @@
     <Compile Include="EventsTest.cs" />
     <Compile Include="RestClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WithTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -29,5 +29,15 @@ namespace Everest.Pipeline
                 _unusedOptions.Remove(option);
             }
         }
+
+        public void UseAll<TOption>(Action<IEnumerable<TOption>> useOptions) where TOption : PipelineOption
+        {
+            var options = _options.OfType<TOption>().ToArray();
+            useOptions(options);
+            foreach (var option in options)
+            {
+                _unusedOptions.Remove(option);
+            }
+        }
     }
 }

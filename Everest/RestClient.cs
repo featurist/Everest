@@ -91,6 +91,11 @@ namespace Everest
             return new SubordinateResource(response, response.RequestMessage.RequestUri, Adapter, _ambientPipelineOptions);
         }
 
+        public Resource With(params PipelineOption[] options)
+        {
+            return new RestClient(Url, Adapter, _ambientPipelineOptions.Concat(options));
+        }
+
         private void ApplyPipelineToRequest(HttpRequestMessage request, PipelineOptions options)
         {
             foreach (var element in _pipeline)

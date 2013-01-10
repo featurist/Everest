@@ -9,5 +9,6 @@ namespace Everest
     {
         Uri Url { get; }
         Response Send(HttpMethod method, string uri, BodyContent body, params PipelineOption[] overridingPipelineOptions);
+        Resource With(params PipelineOption[] options);
     }
 }

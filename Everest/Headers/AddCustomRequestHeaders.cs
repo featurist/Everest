@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using Everest.Pipeline;
 
@@ -8,12 +9,17 @@ namespace Everest.Headers
     {
         public void ApplyToRequest(HttpRequestMessage request, PipelineOptions pipelineOptions)
         {
-            pipelineOptions.Use<SetRequestHeaders>(headers => AddRequestHeaders(request, headers));
+            pipelineOptions.UseAll<SetRequestHeaders>(options => AddRequestHeaders(request, options));
         }
 
-        private void AddRequestHeaders(HttpRequestMessage request, IEnumerable<KeyValuePair<string, string>> headers)
+        private static void AddRequestHeaders(HttpRequestMessage request, IEnumerable<SetRequestHeaders> options)
         {
-            foreach (var header in headers)
+            var mergedHeaders = new Dictionary<string, string>();
+            foreach (var header in options.SelectMany(option => option))
+            {
+                mergedHeaders[header.Key] = header.Value;
+            }
+            foreach (var header in mergedHeaders)
             {
                 request.Headers.Add(header.Key, header.Value);
             }
