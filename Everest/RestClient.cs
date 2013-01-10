@@ -45,6 +45,7 @@ namespace Everest
 
         public event EventHandler<RequestEventArgs> Sending;
         public event EventHandler<ResponseEventArgs> Responded;
+        public event EventHandler<RequestErrorEventArgs> SendError;
 
         public Uri Url { get; private set; }
 
@@ -77,7 +78,20 @@ namespace Everest
                 Sending(this, new RequestEventArgs(requestDetails));
             }
 
-            var response = Adapter.SendAsync(request).Result;
+            HttpResponseMessage response;
+
+            try
+            {
+                response = Adapter.SendAsync(request).Result;
+            }
+            catch (AggregateException exception)
+            {
+                if (SendError != null)
+                {
+                    SendError(this, new RequestErrorEventArgs(requestDetails, exception.InnerException));
+                }
+                throw exception.InnerException;
+            }
 
             if (Responded != null)
             {

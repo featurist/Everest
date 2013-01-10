@@ -8,7 +8,10 @@ namespace Everest.UnitTests
     {
         public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            throw new Exception("oopsie");
+            return Task.Factory.StartNew<HttpResponseMessage>(() =>
+            {
+                throw new Exception("oopsie");
+            });
         }
     }
 }

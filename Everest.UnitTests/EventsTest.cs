@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Everest.Pipeline;
@@ -75,6 +76,17 @@ namespace Everest.UnitTests
             client.Responded += (sender, args) => respondedEvents.Add(args.Response);
             Assert.That(() => client.Get(BaseAddress + "/foo?omg=yeah"), Throws.Exception);
             Assert.That(respondedEvents, Is.Empty);
+        }
+
+        [Test]
+        public void RaisesExceptionEventForRequestsWhenSendingThrows()
+        {
+            var client = new RestClient(null, new AlwaysThrowsOnSendingAdapter(), new List<PipelineOption>());
+            var sendErrors = new List<Exception>();
+            client.SendError += (sender, args) => sendErrors.Add(args.Exception);
+            Assert.That(() => client.Get("http://irrelevant"), Throws.Exception);
+            Assert.That(sendErrors.Count, Is.EqualTo(1));
+            Assert.That(sendErrors[0], Is.Not.InstanceOf<AggregateException>());
         }
     }
 }

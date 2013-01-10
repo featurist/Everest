@@ -45,6 +45,7 @@
     <Compile Include="Headers\ExpectResponseHeaders.cs" />
     <Compile Include="Headers\HttpResponseMessageExtensions.cs" />
     <Compile Include="Headers\UnexpectedResponseHeaderException.cs" />
+    <Compile Include="RequestErrorEventArgs.cs" />
     <Compile Include="RequestEventArgs.cs" />
     <Compile Include="ResponseDetails.cs" />
     <Compile Include="ResponseEventArgs.cs" />
