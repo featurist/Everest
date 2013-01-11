@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlwaysThrowsOnSendingAdapter.cs" />
+    <Compile Include="DeliberateException.cs" />
     <Compile Include="EventsTest.cs" />
     <Compile Include="RestClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

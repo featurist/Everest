@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Everest.Pipeline;
@@ -60,10 +59,10 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/foo").Respond((req, res) => res.StatusCode = 418);
             var client = new RestClient();
-            var respondedEvents = new List<ResponseDetails>();
-            client.Responded += (sender, args) => respondedEvents.Add(args.Response);
+            var respondedEvents = new List<ResponseEventArgs>();
+            client.Responded += (sender, args) => respondedEvents.Add(args);
             client.Get(BaseAddress + "/foo?teapot=yes", new ExpectStatus((HttpStatusCode)418));
-            Assert.That(respondedEvents.Single().Status, Is.EqualTo(418));
+            Assert.That(respondedEvents.Single().Response.Status, Is.EqualTo(418));
             Assert.That(respondedEvents.Single().Request.RequestUri.PathAndQuery, Is.EqualTo("/foo?teapot=yes"));
         }
 
@@ -79,14 +78,25 @@ namespace Everest.UnitTests
         }
 
         [Test]
-        public void RaisesExceptionEventForRequestsWhenSendingThrows()
+        public void RaisesErrorEventForRequestsWhenSendingThrows()
         {
             var client = new RestClient(null, new AlwaysThrowsOnSendingAdapter(), new List<PipelineOption>());
-            var sendErrors = new List<Exception>();
-            client.SendError += (sender, args) => sendErrors.Add(args.Exception);
+            var sendErrors = new List<RequestErrorEventArgs>();
+            client.SendError += (sender, args) => sendErrors.Add(args);
             Assert.That(() => client.Get("http://irrelevant"), Throws.Exception);
             Assert.That(sendErrors.Count, Is.EqualTo(1));
-            Assert.That(sendErrors[0], Is.Not.InstanceOf<AggregateException>());
+            Assert.That(sendErrors[0].Exception, Is.InstanceOf<DeliberateException>());
+        }
+
+        [Test]
+        public void RaisedErrorEventIncludesRequestDetails()
+        {
+            var client = new RestClient(null, new AlwaysThrowsOnSendingAdapter(), new List<PipelineOption>());
+            var sendErrors = new List<RequestErrorEventArgs>();
+            client.SendError += (sender, args) => sendErrors.Add(args);
+            Assert.That(() => client.Get("http://howdy/"), Throws.Exception);
+            Assert.That(sendErrors.Count, Is.EqualTo(1));
+            Assert.That(sendErrors[0].Request.RequestUri.AbsoluteUri, Is.EqualTo("http://howdy/"));
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Everest
+﻿namespace Everest
 {
-    public class ResponseEventArgs : EventArgs
+    public class ResponseEventArgs : RequestEventArgs
     {
         private readonly ResponseDetails _response;
 
-        public ResponseEventArgs(ResponseDetails response)
+        public ResponseEventArgs(RequestDetails request, ResponseDetails response) : base(request)
         {
             _response = response;
         }

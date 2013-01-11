@@ -2,7 +2,6 @@
 {
     public interface ResponseDetails
     {
-        RequestDetails Request { get; }
         int Status { get; }
     }
 }

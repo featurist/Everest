@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Everest.UnitTests
@@ -10,7 +9,7 @@ namespace Everest.UnitTests
         {
             return Task.Factory.StartNew<HttpResponseMessage>(() =>
             {
-                throw new Exception("oopsie");
+                throw new DeliberateException();
             });
         }
     }

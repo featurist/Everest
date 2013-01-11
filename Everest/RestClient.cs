@@ -58,28 +58,15 @@ namespace Everest
         public Response Send(HttpMethod method, string uri, BodyContent body, params PipelineOption[] overridingPipelineOptions)
         {
             var options = new PipelineOptions(_ambientPipelineOptions.Concat(overridingPipelineOptions));
+            HttpRequestMessageRequestDetails requestDetails;
+            var request = CreateRequestMessage(method, uri, body, options, out requestDetails);
+            var response = TrySending(request, requestDetails, options);
+            return new SubordinateResource(response, response.RequestMessage.RequestUri, Adapter, _ambientPipelineOptions);
+        }
 
-            var absoluteUri = AbsoluteUrlOf(uri);
-            var request = new HttpRequestMessage();
-            ApplyPipelineToRequest(request, options);
-
-            if (body != null)
-            {
-                request.Content = new StringContent(body.AsString(), Encoding.UTF8, body.MediaType);
-            }
-            request.RequestUri = absoluteUri;
-            request.Method = method;
-
-
-            HttpRequestMessageRequestDetails requestDetails = null;
-            if (Sending != null)
-            {
-                requestDetails = new HttpRequestMessageRequestDetails(request);
-                Sending(this, new RequestEventArgs(requestDetails));
-            }
-
+        private HttpResponseMessage TrySending(HttpRequestMessage request, HttpRequestMessageRequestDetails requestDetails, PipelineOptions options)
+        {
             HttpResponseMessage response;
-
             try
             {
                 response = Adapter.SendAsync(request).Result;
@@ -88,6 +75,7 @@ namespace Everest
             {
                 if (SendError != null)
                 {
+                    requestDetails = requestDetails ?? new HttpRequestMessageRequestDetails(request);
                     SendError(this, new RequestErrorEventArgs(requestDetails, exception.InnerException));
                 }
                 throw exception.InnerException;
@@ -95,14 +83,33 @@ namespace Everest
 
             if (Responded != null)
             {
-                Responded(this, new ResponseEventArgs(new HttpResponseMessageResponseDetails(requestDetails ?? new HttpRequestMessageRequestDetails(request), response)));
+                requestDetails = requestDetails ?? new HttpRequestMessageRequestDetails(request);
+                Responded(this, new ResponseEventArgs(requestDetails, new HttpResponseMessageResponseDetails(requestDetails, response)));
             }
-
             ApplyPipelineToResponse(response, options);
-
             options.AssertAllOptionsWereUsed();
+            return response;
+        }
 
-            return new SubordinateResource(response, response.RequestMessage.RequestUri, Adapter, _ambientPipelineOptions);
+        private HttpRequestMessage CreateRequestMessage(HttpMethod method, string uri, BodyContent body, PipelineOptions options,
+                                                        out HttpRequestMessageRequestDetails requestDetails)
+        {
+            var absoluteUri = AbsoluteUrlOf(uri);
+            var request = new HttpRequestMessage();
+            ApplyPipelineToRequest(request, options);
+            if (body != null)
+            {
+                request.Content = new StringContent(body.AsString(), Encoding.UTF8, body.MediaType);
+            }
+            request.RequestUri = absoluteUri;
+            request.Method = method;
+            requestDetails = null;
+            if (Sending != null)
+            {
+                requestDetails = new HttpRequestMessageRequestDetails(request);
+                Sending(this, new RequestEventArgs(requestDetails));
+            }
+            return request;
         }
 
         public Resource With(params PipelineOption[] options)
