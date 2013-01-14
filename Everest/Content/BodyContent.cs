@@ -1,8 +1,10 @@
-﻿namespace Everest.Content
+﻿using System.IO;
+
+namespace Everest.Content
 {
     public interface BodyContent
     {
-        string AsString();
+        Stream AsStream();
         string MediaType { get; }
     }
 }

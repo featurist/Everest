@@ -1,4 +1,7 @@
-﻿namespace Everest.Content
+﻿using System.IO;
+using System.Text;
+
+namespace Everest.Content
 {
     public class StringBodyContent : BodyContent
     {
@@ -9,9 +12,9 @@
             _body = body;
         }
 
-        public string AsString()
+        public Stream AsStream()
         {
-            return _body;
+            return new MemoryStream(Encoding.UTF8.GetBytes(_body));
         }
 
         public string MediaType { get { return null;  } }

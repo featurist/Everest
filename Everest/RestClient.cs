@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using Everest.Auth;
 using Everest.Content;
@@ -99,7 +100,12 @@ namespace Everest
             ApplyPipelineToRequest(request, options);
             if (body != null)
             {
-                request.Content = new StringContent(body.AsString(), Encoding.UTF8, body.MediaType);
+                var content = new StreamContent(body.AsStream());
+                if (body.MediaType != null)
+                {
+                    content.Headers.ContentType = new MediaTypeHeaderValue(body.MediaType);
+                }
+                request.Content = content;
             }
             request.RequestUri = absoluteUri;
             request.Method = method;

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Text;
 using Everest.Content;
 using Everest.Headers;
 using Everest.Pipeline;
@@ -118,6 +120,21 @@ namespace Everest.UnitTests
             var response = _client.Get(BaseAddress + "/self");
             var body = response.Post("body").Body;
             Assert.That(body, Is.EqualTo("posted body"));
+        }
+
+        [Test]
+        public void CanPutBinaryContentInStream()
+        {
+            _server.OnPut("/image").Respond((req, res) =>
+                {
+                    var body = req.BodyAs<Stream>();
+                    res.Headers["Content-Type"] = req.Headers["Content-Type"];
+                    res.Body = body;
+                });
+
+            var image = _client.Put(BaseAddress + "/image", new StreamBodyContent(new MemoryStream(Encoding.UTF8.GetBytes("this is an image")), "image/png"));
+            Assert.That(image.ContentType, Is.EqualTo("image/png"));
+            Assert.That(image.Body, Is.EqualTo("this is an image"));
         }
 
         [Test]

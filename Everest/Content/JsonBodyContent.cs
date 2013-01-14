@@ -1,17 +1,9 @@
 ﻿namespace Everest.Content
 {
-    public class JsonBodyContent : BodyContent
+    public class JsonBodyContent : StringBodyContent
     {
-        private readonly string _json;
-
-        public JsonBodyContent(string json)
+        public JsonBodyContent(string json) : base(json)
         {
-            _json = json;
-        }
-
-        public string AsString()
-        {
-            return _json;
         }
 
         public string MediaType { get { return "application/json"; } }
