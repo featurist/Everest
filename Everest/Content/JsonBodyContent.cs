@@ -2,10 +2,9 @@
 {
     public class JsonBodyContent : StringBodyContent
     {
-        public JsonBodyContent(string json) : base(json)
+        public JsonBodyContent(string json)
+            : base(json, "application/json")
         {
         }
-
-        public string MediaType { get { return "application/json"; } }
     }
 }
