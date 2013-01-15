@@ -308,6 +308,18 @@ namespace Everest.UnitTests
             Assert.That(() => client.Get("/respond-with-foo"), Throws.Nothing);
         }
 
+        [Test]
+        public void IsInstantiableWithNoArguments()
+        {
+            Assert.That(new RestClient().Url, Is.EqualTo(null));
+        }
+
+        [Test]
+        public void IsInstantiableWithStringAsUrl()
+        {
+            Assert.That(new RestClient("http://www.featurist.co.uk/").Url.AbsoluteUri, Is.EqualTo("http://www.featurist.co.uk/"));
+        }
+
         private class BogusOption : PipelineOption
         {
         }

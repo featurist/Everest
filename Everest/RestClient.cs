@@ -32,15 +32,18 @@ namespace Everest
         {
         }
 
-        public RestClient(params PipelineOption[] options) : this(null, options)
+        public RestClient(params PipelineOption[] ambientPipelineOptions)
+            : this(null, ambientPipelineOptions)
         {
         }
 
-        public RestClient(string url, params PipelineOption[] options) : this(new Uri(url), DefaultAdapter, options)
+        public RestClient(string url, params PipelineOption[] ambientPipelineOptions)
+            : this(url == null ? null : new Uri(url), DefaultAdapter, ambientPipelineOptions)
         {
         }
 
-        public RestClient(string url, HttpClientAdapter adapter, IEnumerable<PipelineOption> ambientPipelineOptions) : this(new Uri(url), adapter, ambientPipelineOptions)
+        public RestClient(string url, HttpClientAdapter adapter, IEnumerable<PipelineOption> ambientPipelineOptions)
+            : this(url == null ? null : new Uri(url), adapter, ambientPipelineOptions)
         {
         }
 
