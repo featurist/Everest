@@ -27,12 +27,12 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/headers").Respond((req, res) => res.Body = req.Headers["a"] + "," + req.Headers["b"]);
 
-            var client = new RestClient();
+            var client = new RestClient(BaseAddress);
             var response = client.With(new RequestHeader("a", "1"), new RequestHeader("b", "2")).Get(BaseAddress + "/headers");
             Assert.That(response.Body, Is.EqualTo("1,2"));
-            response = response.With(new RequestHeader("a", "3")).Get(BaseAddress + "/headers");
+            response = response.With(new RequestHeader("a", "3")).Get("/headers");
             Assert.That(response.Body, Is.EqualTo("3,2"));
-            response = response.With(new RequestHeader("b", "4")).Get(BaseAddress + "/headers");
+            response = response.With(new RequestHeader("b", "4")).Get("/headers");
             Assert.That(response.Body, Is.EqualTo("3,4"));
         }
     }

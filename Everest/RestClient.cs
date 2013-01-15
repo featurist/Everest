@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using Everest.Auth;
 using Everest.Content;
 using Everest.Headers;
@@ -33,7 +32,15 @@ namespace Everest
         {
         }
 
-        public RestClient(params PipelineOption[] options) : this(null, DefaultAdapter, options)
+        public RestClient(params PipelineOption[] options) : this(null, options)
+        {
+        }
+
+        public RestClient(string url, params PipelineOption[] options) : this(new Uri(url), DefaultAdapter, options)
+        {
+        }
+
+        public RestClient(string url, HttpClientAdapter adapter, IEnumerable<PipelineOption> ambientPipelineOptions) : this(new Uri(url), adapter, ambientPipelineOptions)
         {
         }
 

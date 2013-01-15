@@ -24,7 +24,7 @@ namespace Everest.UnitTests
             _server = new Server(18745);
             _server.OnGet("/foo").RespondWith("foo!");
             _server.OnGet("/foo/bar").RespondWith("foo bar?");
-            _client = new RestClient();
+            _client = new RestClient(BaseAddress);
         }
 
         [TearDown]
@@ -36,7 +36,7 @@ namespace Everest.UnitTests
         [Test]
         public void ReturnsNewResourceAfterEachRequest()
         {
-            var fooResource = _client.Get(BaseAddress + "/foo");
+            var fooResource = _client.Get("/foo");
             var fooBody = fooResource.Body;
             Assert.That(fooBody, Is.EqualTo("foo!"));
 
@@ -49,7 +49,7 @@ namespace Everest.UnitTests
         public void FollowsLinksRelativeToResourceEvenAfterRedirect()
         {
             _server.OnGet("/redirect").RedirectTo("/foo");
-            var body = _client.Get(BaseAddress + "/redirect").Get("foo/bar").Body;
+            var body = _client.Get("/redirect").Get("foo/bar").Body;
             Assert.That(body, Is.EqualTo("foo bar?"));
         }
 
@@ -57,7 +57,7 @@ namespace Everest.UnitTests
         public void MakesPutRequests()
         {
             _server.OnPut("/foo").RespondWith(requestBody => "putted " + requestBody);
-            var body = _client.Put(BaseAddress + "/foo", "body").Body;
+            var body = _client.Put("/foo", "body").Body;
             Assert.That(body, Is.EqualTo("putted body"));
         }
 
@@ -66,7 +66,7 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/whaa").Respond((req, res) => { res.Headers["X-Custom"] = "my custom header"; });
 
-            var response = _client.Get(BaseAddress + "/whaa", ExpectStatus.OK);
+            var response = _client.Get("/whaa", ExpectStatus.OK);
             Assert.That(response.Headers["X-Custom"], Is.EqualTo("my custom header"));
         }
 
@@ -75,7 +75,7 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/contentType").Respond((req, res) => { res.Headers["Content-Type"] = "x/foo"; });
 
-            var response = _client.Get(BaseAddress + "/contentType");
+            var response = _client.Get("/contentType");
             Assert.That(response.Headers.ContainsKey("Content-Type"));
             Assert.That(response.Headers["Content-Type"], Is.EqualTo("x/foo"));
         }
@@ -84,7 +84,7 @@ namespace Everest.UnitTests
         public void MakesOptionsRequests()
         {
             _server.OnOptions("/whaa").RespondWith("options!");
-            var body = _client.Options(BaseAddress + "/whaa", ExpectStatus.OK).Body;
+            var body = _client.Options("/whaa", ExpectStatus.OK).Body;
             Assert.That(body, Is.EqualTo("options!"));
         }
 
@@ -92,7 +92,7 @@ namespace Everest.UnitTests
         public void MakesPostRequests()
         {
             _server.OnPost("/foo").RespondWith(requestBody => "posted " + requestBody);
-            var body = _client.Post(BaseAddress + "/foo", "body", ExpectStatus.OK).Body;
+            var body = _client.Post("/foo", "body", ExpectStatus.OK).Body;
             Assert.That(body, Is.EqualTo("posted body"));
         }
 
@@ -100,7 +100,7 @@ namespace Everest.UnitTests
         public void MakesPostRequestsWithBodyContent()
         {
             _server.OnPost("/foo").RespondWith(requestBody => "posted " + requestBody);
-            var body = _client.Post(BaseAddress + "/foo", new StringBodyContent("body"), ExpectStatus.OK).Body;
+            var body = _client.Post("/foo", new StringBodyContent("body"), ExpectStatus.OK).Body;
             Assert.That(body, Is.EqualTo("posted body"));
         }
 
@@ -108,7 +108,7 @@ namespace Everest.UnitTests
         public void MakesHeadRequests()
         {
             _server.OnHead("/foo").Respond((req, res) => res.StatusCode = 303);
-            var response = _client.Head(BaseAddress + "/foo", new ExpectStatus(HttpStatusCode.SeeOther));
+            var response = _client.Head("/foo", new ExpectStatus(HttpStatusCode.SeeOther));
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.SeeOther));
         }
 
@@ -117,7 +117,7 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/self").RespondWith("good on ya");
             _server.OnPost("/self").RespondWith(requestBody => "posted " + requestBody);
-            var response = _client.Get(BaseAddress + "/self");
+            var response = _client.Get("/self");
             var body = response.Post("body").Body;
             Assert.That(body, Is.EqualTo("posted body"));
         }
@@ -132,7 +132,7 @@ namespace Everest.UnitTests
                     res.Body = body;
                 });
 
-            var image = _client.Put(BaseAddress + "/image", new StreamBodyContent(new MemoryStream(Encoding.UTF8.GetBytes("this is an image")), "image/png"));
+            var image = _client.Put("/image", new StreamBodyContent(new MemoryStream(Encoding.UTF8.GetBytes("this is an image")), "image/png"));
             Assert.That(image.ContentType, Is.EqualTo("image/png"));
             Assert.That(image.Body, Is.EqualTo("this is an image"));
         }
@@ -142,7 +142,7 @@ namespace Everest.UnitTests
         {
             try
             {
-                _client.Get(BaseAddress + "/non-existent");
+                _client.Get("/non-existent");
             }
             catch (UnexpectedStatusException e)
             {
@@ -153,34 +153,34 @@ namespace Everest.UnitTests
         [Test]
         public void GetExpectStatusIsOverridable()
         {
-            Assert.That(() => _client.Get(BaseAddress + "/foo", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.InstanceOf<UnexpectedStatusException>());
+            Assert.That(() => _client.Get("/foo", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.InstanceOf<UnexpectedStatusException>());
         }
 
         [Test]
         public void PutExpectStatusIsOverridable()
         {
-            Assert.That(() => _client.Put(BaseAddress + "/foo", "oops", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.InstanceOf<UnexpectedStatusException>());
+            Assert.That(() => _client.Put("/foo", "oops", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.InstanceOf<UnexpectedStatusException>());
         }
 
         [Test]
         public void GetTakesHeaders()
         {
             _server.OnGet("/headers").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var response = _client.Get(BaseAddress + "/headers", new Dictionary<string, string> { { "x-something", "wowzer" } });
+            var response = _client.Get("/headers", new Dictionary<string, string> { { "x-something", "wowzer" } });
             Assert.That(response.Body, Is.EqualTo("wowzer"));
         }
 
         [Test]
         public void ThrowsWhenUnsupportedPerRequestOptionsAreSupplied()
         {
-            Assert.That(() => _client.Get(BaseAddress + "/foo", new BogusOption()), Throws.InstanceOf<UnsupportedOptionException>());
+            Assert.That(() => _client.Get("/foo", new BogusOption()), Throws.InstanceOf<UnsupportedOptionException>());
         }
 
         [Test]
         public void ThrowsWhenUnsupportedAmbientOptionsAreSupplied()
         {
             _server.OnGet("/blah").RespondWith("ok!");
-            Assert.That(() => new RestClient(new BogusOption()).Get(BaseAddress + "/blah"), Throws.InstanceOf<UnsupportedOptionException>());
+            Assert.That(() => new RestClient(BaseAddress, new BogusOption()).Get("/blah"), Throws.InstanceOf<UnsupportedOptionException>());
         }
 
         [Test]
@@ -188,8 +188,8 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/headers").Respond((req, res) => res.Body = req.Headers["x-per-client"]);
 
-            var client = new RestClient(new SetRequestHeaders(new Dictionary<string, string> { { "x-per-client", "x" } }));
-            var firstResponse = client.Get(BaseAddress + "/headers");
+            var client = new RestClient(BaseAddress, new SetRequestHeaders(new Dictionary<string, string> { { "x-per-client", "x" } }));
+            var firstResponse = client.Get("/headers");
             Assert.That(firstResponse.Body, Is.EqualTo("x"));
             var secondResponse = firstResponse.Get("/headers");
             Assert.That(secondResponse.Body, Is.EqualTo("x"));
@@ -200,8 +200,8 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/headers").Respond((req, res) => res.Body = req.Headers["x-per-client"]);
 
-            var client = new RestClient();
-            var firstResponse = client.Get(BaseAddress + "/headers", new SetRequestHeaders(new Dictionary<string, string> { { "x-per-client", "x" } }));
+            var client = new RestClient(BaseAddress);
+            var firstResponse = client.Get("/headers", new SetRequestHeaders(new Dictionary<string, string> { { "x-per-client", "x" } }));
             Assert.That(firstResponse.Body, Is.EqualTo("x"));
             var secondResponse = firstResponse.Get("/headers");
             Assert.That(secondResponse.Body, Is.EqualTo(""));
@@ -211,8 +211,8 @@ namespace Everest.UnitTests
         public void ProvidesAConvenientWayToSetAcceptHeader()
         {
             _server.OnGet("/accept").Respond((req, res) => res.Body = req.Headers["Accept"]);
-            var client = new RestClient();
-            var response = client.Get(BaseAddress + "/accept", new Accept("foo/bar"));
+            var client = new RestClient(BaseAddress);
+            var response = client.Get("/accept", new Accept("foo/bar"));
             Assert.That(response.Body, Is.EqualTo("foo/bar"));
         }
 
@@ -220,10 +220,10 @@ namespace Everest.UnitTests
         public void ThrowsWhenExpectedResponseHeaderIsNotSet()
         {
             _server.OnGet("/respond-with-bar").RespondWith("oops, no x header!");
-            var client = new RestClient(new ExpectResponseHeaders { { "x", "foo" }});
+            var client = new RestClient(BaseAddress, new ExpectResponseHeaders { { "x", "foo" }});
             try
             {
-                client.Get(BaseAddress + "/respond-with-bar");
+                client.Get("/respond-with-bar");
                 Assert.Fail("Expected UnexpectedResponseHeaderException");
             }
             catch (UnexpectedResponseHeaderException e)
@@ -239,10 +239,10 @@ namespace Everest.UnitTests
         public void ThrowsWhenExpectedResponseHeaderHasUnexpectedValue()
         {
             _server.OnGet("/respond-with-bar").Respond((req, res) => res.Headers["x"] = "bar");
-            var client = new RestClient(new ExpectResponseHeaders { { "x", "foo" }});
+            var client = new RestClient(BaseAddress, new ExpectResponseHeaders { { "x", "foo" }});
             try
             {
-                client.Get(BaseAddress + "/respond-with-bar");
+                client.Get("/respond-with-bar");
                 Assert.Fail("Expected UnexpectedResponseHeaderException");
             }
             catch (UnexpectedResponseHeaderException e)
@@ -258,18 +258,18 @@ namespace Everest.UnitTests
         public void DoesNotThrowWhenExpectedResponseContentHeadersAreSetToExpectedValues()
         {
             _server.OnGet("/respond-with-foo").Respond((req, res) => res.Headers["Content-Type"] = "x/foo");
-            var client = new RestClient(new ExpectResponseHeaders { { "Content-Type", "x/foo" } });
-            Assert.That(() => client.Get(BaseAddress + "/respond-with-foo"), Throws.Nothing);
+            var client = new RestClient(BaseAddress, new ExpectResponseHeaders { { "Content-Type", "x/foo" } });
+            Assert.That(() => client.Get("/respond-with-foo"), Throws.Nothing);
         }
 
         [Test]
         public void ThrowsWhenExpectedResponseContentHeaderIsNotSet()
         {
             _server.OnGet("/respond-with-bar").Respond((req, res) => res.Headers["Content-Type"] = null);
-            var client = new RestClient(new ExpectResponseHeaders { { "Content-Type", "oh/really" } });
+            var client = new RestClient(BaseAddress, new ExpectResponseHeaders { { "Content-Type", "oh/really" } });
             try
             {
-                client.Get(BaseAddress + "/respond-with-bar");
+                client.Get("/respond-with-bar");
                 Assert.Fail("Expected UnexpectedResponseHeaderException");
             }
             catch (UnexpectedResponseHeaderException e)
@@ -285,10 +285,10 @@ namespace Everest.UnitTests
         public void ThrowsWhenExpectedResponseContentHeaderHasUnexpectedValue()
         {
             _server.OnGet("/respond-with-bar").Respond((req, res) => res.Headers["Content-Type"] = "x/bar");
-            var client = new RestClient(new ExpectResponseHeaders { { "Content-Type", "x/foo" } });
+            var client = new RestClient(BaseAddress, new ExpectResponseHeaders { { "Content-Type", "x/foo" } });
             try
             {
-                client.Get(BaseAddress + "/respond-with-bar");
+                client.Get("/respond-with-bar");
                 Assert.Fail("Expected UnexpectedResponseHeaderException");
             }
             catch (UnexpectedResponseHeaderException e)
@@ -304,8 +304,8 @@ namespace Everest.UnitTests
         public void DoesNotThrowWhenExpectedResponseHeadersAreSetToExpectedValues()
         {
             _server.OnGet("/respond-with-foo").Respond((req, res) => res.Headers["x"] = "foo");
-            var client = new RestClient(new ExpectResponseHeaders { { "x", "foo" } });
-            Assert.That(() => client.Get(BaseAddress + "/respond-with-foo"), Throws.Nothing);
+            var client = new RestClient(BaseAddress, new ExpectResponseHeaders { { "x", "foo" } });
+            Assert.That(() => client.Get("/respond-with-foo"), Throws.Nothing);
         }
 
         private class BogusOption : PipelineOption
