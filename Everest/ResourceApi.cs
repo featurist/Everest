@@ -54,6 +54,16 @@ namespace Everest
             return resource.Post(string.Empty, new StringBodyContent(body), UnionHeadersWithPipelineOptions(headers, pipelineOptions));
         }
 
+        public static Response Put(this Resource resource, string uri, IDictionary<string, string> headers, string body, params PipelineOption[] pipelineOptions)
+        {
+            return resource.Send(HttpMethod.Put, uri, new StringBodyContent(body), UnionHeadersWithPipelineOptions(headers, pipelineOptions));
+        }
+
+        public static Response Put(this Resource resource, string uri, IDictionary<string, string> headers, BodyContent body, params PipelineOption[] pipelineOptions)
+        {
+            return resource.Send(HttpMethod.Put, uri, body, UnionHeadersWithPipelineOptions(headers, pipelineOptions));
+        }
+
         public static Response Put(this Resource resource, string uri, string body, params PipelineOption[] pipelineOptions)
         {
             return resource.Send(HttpMethod.Put, uri, new StringBodyContent(body), pipelineOptions);

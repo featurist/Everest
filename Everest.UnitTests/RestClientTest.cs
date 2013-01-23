@@ -140,6 +140,22 @@ namespace Everest.UnitTests
         }
 
         [Test]
+        public void PutTakesHeaders_WithBodyContent()
+        {
+            _server.OnPut("/headers/123").Respond((req, res) => res.Body = req.Headers["x-something"]);
+            var body = _client.Put("/headers/123", new Dictionary<string, string> { { "x-something", "wowzer" } }, new StringBodyContent("body"), ExpectStatus.OK).Body;
+            Assert.That(body, Is.EqualTo("wowzer"));
+        }
+
+        [Test]
+        public void PutTakesHeaders_WithStringBody()
+        {
+            _server.OnPut("/headers/123").Respond((req, res) => res.Body = req.Headers["x-something"]);
+            var body = _client.Put("/headers/123", new Dictionary<string, string> { { "x-something", "wowzer" } }, "body", ExpectStatus.OK).Body;
+            Assert.That(body, Is.EqualTo("wowzer"));
+        }
+
+        [Test]
         public void MakesHeadRequests()
         {
             _server.OnHead("/foo").Respond((req, res) => res.StatusCode = 303);
