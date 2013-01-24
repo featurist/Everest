@@ -105,57 +105,6 @@ namespace Everest.UnitTests
         }
 
         [Test]
-        public void PostTakesHeaders()
-        {
-            _server.OnPost("/headers").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var body = _client.Post("/headers", new Dictionary<string, string> { { "x-something", "wowzer" } }, new StringBodyContent("body"), ExpectStatus.OK).Body;
-            Assert.That(body, Is.EqualTo("wowzer"));
-
-            body = _client.Post("/headers", new Dictionary<string, string> { { "x-something", "wowzer" } }, new StringBodyContent("body"), ExpectStatus.OK).Body;
-            Assert.That(body, Is.EqualTo("wowzer"));
-        }
-
-        [Test]
-        public void PostTakesHeaders_WithBodyContent()
-        {
-            _server.OnPost("/headers").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var body = _client.Post("/headers", new Dictionary<string, string> { { "x-something", "wowzer" } }, new StringBodyContent("body"), ExpectStatus.OK).Body;
-            Assert.That(body, Is.EqualTo("wowzer"));
-        }
-
-        [Test]
-        public void PostTakesHeaders_WithStringBody()
-        {
-            _server.OnPost("/headers").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var body = _client.Post("/headers", new Dictionary<string, string> { { "x-something", "wowzer" } }, "body", ExpectStatus.OK).Body;
-            Assert.That(body, Is.EqualTo("wowzer"));
-        }
-
-        [Test]
-        public void PostTakesHeaders_WithNoUrlSupplied()
-        {
-            _server.OnPost("/").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var body = _client.Post(new Dictionary<string, string> { { "x-something", "wowzer" } }, "body", ExpectStatus.OK).Body;
-            Assert.That(body, Is.EqualTo("wowzer"));
-        }
-
-        [Test]
-        public void PutTakesHeaders_WithBodyContent()
-        {
-            _server.OnPut("/headers/123").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var body = _client.Put("/headers/123", new Dictionary<string, string> { { "x-something", "wowzer" } }, new StringBodyContent("body"), ExpectStatus.OK).Body;
-            Assert.That(body, Is.EqualTo("wowzer"));
-        }
-
-        [Test]
-        public void PutTakesHeaders_WithStringBody()
-        {
-            _server.OnPut("/headers/123").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var body = _client.Put("/headers/123", new Dictionary<string, string> { { "x-something", "wowzer" } }, "body", ExpectStatus.OK).Body;
-            Assert.That(body, Is.EqualTo("wowzer"));
-        }
-
-        [Test]
         public void MakesHeadRequests()
         {
             _server.OnHead("/foo").Respond((req, res) => res.StatusCode = 303);
@@ -211,14 +160,6 @@ namespace Everest.UnitTests
         public void PutExpectStatusIsOverridable()
         {
             Assert.That(() => _client.Put("/foo", "oops", new ExpectStatus(HttpStatusCode.InternalServerError)), Throws.InstanceOf<UnexpectedStatusException>());
-        }
-
-        [Test]
-        public void GetTakesHeaders()
-        {
-            _server.OnGet("/headers").Respond((req, res) => res.Body = req.Headers["x-something"]);
-            var response = _client.Get("/headers", new Dictionary<string, string> { { "x-something", "wowzer" } });
-            Assert.That(response.Body, Is.EqualTo("wowzer"));
         }
 
         [Test]
