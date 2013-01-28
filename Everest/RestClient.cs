@@ -22,13 +22,14 @@ namespace Everest
                                                           new EnsureAcceptableResponseHeaders()
                                                       };
 
-        private static readonly PipelineOption[] DefaultAmbientOptions = new PipelineOption[] {};
-        private static readonly HttpClientAdapter DefaultAdapter = new SystemNetHttpClientAdapter();
+        private static readonly PipelineOption[] DefaultPipelineOptions = new PipelineOption[] { new Accept("*/*") };
+
+        private static readonly HttpClientAdapterFactory _defaultAdapterFactory = new SystemNetHttpClientAdapterFactory();
+        private readonly HttpClientAdapterFactory _adapterFactory;
 
         private readonly IEnumerable<PipelineOption> _ambientPipelineOptions;
-        protected readonly HttpClientAdapter Adapter;
 
-        public RestClient() : this(DefaultAmbientOptions)
+        public RestClient() : this(new PipelineOption[] { })
         {
         }
 
@@ -38,19 +39,19 @@ namespace Everest
         }
 
         public RestClient(string url, params PipelineOption[] ambientPipelineOptions)
-            : this(url == null ? null : new Uri(url), DefaultAdapter, ambientPipelineOptions)
+            : this(url == null ? null : new Uri(url), _defaultAdapterFactory, ambientPipelineOptions)
         {
         }
 
-        public RestClient(string url, HttpClientAdapter adapter, IEnumerable<PipelineOption> ambientPipelineOptions)
-            : this(url == null ? null : new Uri(url), adapter, ambientPipelineOptions)
+        public RestClient(string url, HttpClientAdapterFactory adapterFactory, IEnumerable<PipelineOption> ambientPipelineOptions)
+            : this(url == null ? null : new Uri(url), adapterFactory, ambientPipelineOptions)
         {
         }
 
-        public RestClient(Uri url, HttpClientAdapter adapter, IEnumerable<PipelineOption> ambientPipelineOptions)
+        public RestClient(Uri url, HttpClientAdapterFactory adapterFactory, IEnumerable<PipelineOption> ambientPipelineOptions)
         {
             Url = url;
-            Adapter = adapter;
+            _adapterFactory = adapterFactory;
             _ambientPipelineOptions = ambientPipelineOptions;
         }
 
@@ -68,19 +69,20 @@ namespace Everest
 
         public Response Send(HttpMethod method, string uri, BodyContent body, params PipelineOption[] overridingPipelineOptions)
         {
-            var options = new PipelineOptions(_ambientPipelineOptions.Concat(overridingPipelineOptions));
+            var combinedOptions = new PipelineOptions(DefaultPipelineOptions.Concat(_ambientPipelineOptions.Concat(overridingPipelineOptions)));
             HttpRequestMessageRequestDetails requestDetails;
-            var request = CreateRequestMessage(method, uri, body, options, out requestDetails);
-            var response = TrySending(request, requestDetails, options);
-            return new SubordinateResource(response, response.RequestMessage.RequestUri, Adapter, _ambientPipelineOptions);
+            var request = CreateRequestMessage(method, uri, body, combinedOptions, out requestDetails);
+            var response = TrySending(request, requestDetails, combinedOptions);
+            return new SubordinateResource(response, response.RequestMessage.RequestUri, _adapterFactory, _ambientPipelineOptions);
         }
 
         private HttpResponseMessage TrySending(HttpRequestMessage request, HttpRequestMessageRequestDetails requestDetails, PipelineOptions options)
         {
+            var adapter = _adapterFactory.CreateClient(options);
             HttpResponseMessage response;
             try
             {
-                response = Adapter.SendAsync(request).Result;
+                response = adapter.SendAsync(request).Result;
             }
             catch (AggregateException exception)
             {
@@ -98,7 +100,7 @@ namespace Everest
                 Responded(this, new ResponseEventArgs(requestDetails, new HttpResponseMessageResponseDetails(requestDetails, response)));
             }
             ApplyPipelineToResponse(response, options);
-            options.AssertAllOptionsWereUsed();
+            options.AssertAllRequestResponseOptionsWereUsed();
             return response;
         }
 
@@ -130,7 +132,7 @@ namespace Everest
 
         public Resource With(params PipelineOption[] options)
         {
-            return new RestClient(Url, Adapter, _ambientPipelineOptions.Concat(options));
+            return new RestClient(Url, _adapterFactory, _ambientPipelineOptions.Concat(options));
         }
 
         private void ApplyPipelineToRequest(HttpRequestMessage request, PipelineOptions options)

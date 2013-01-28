@@ -15,7 +15,7 @@ namespace Everest.Pipeline
             _unusedOptions = new HashSet<PipelineOption>(_options);
         }
 
-        public void AssertAllOptionsWereUsed()
+        public void AssertAllRequestResponseOptionsWereUsed()
         {
             if (_unusedOptions.Count > 0)
                 throw new UnsupportedOptionException(_unusedOptions.First());

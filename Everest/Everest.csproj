@@ -50,6 +50,8 @@
     <Compile Include="Headers\ExpectResponseHeaders.cs" />
     <Compile Include="Headers\HttpResponseMessageExtensions.cs" />
     <Compile Include="Headers\UnexpectedResponseHeaderException.cs" />
+    <Compile Include="HttpClientAdapterFactory.cs" />
+    <Compile Include="Redirection\AutoRedirect.cs" />
     <Compile Include="RequestErrorEventArgs.cs" />
     <Compile Include="RequestEventArgs.cs" />
     <Compile Include="ResponseDetails.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="Status\UnexpectedStatusException.cs" />
     <Compile Include="SystemNetHttp\HttpResponseMessageResponseDetails.cs" />
     <Compile Include="SystemNetHttp\SystemNetHttpClientAdapter.cs" />
+    <Compile Include="SystemNetHttp\SystemNetHttpClientAdapterFactory.cs" />
     <Compile Include="XmlExtensions.cs" />
     <Compile Include="Headers\Accept.cs" />
     <Compile Include="Headers\AddCustomRequestHeaders.cs" />

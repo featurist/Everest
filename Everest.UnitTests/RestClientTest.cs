@@ -5,6 +5,7 @@ using System.Text;
 using Everest.Content;
 using Everest.Headers;
 using Everest.Pipeline;
+using Everest.Redirection;
 using Everest.Status;
 using NUnit.Framework;
 using SelfishHttp;
@@ -48,9 +49,58 @@ namespace Everest.UnitTests
         [Test]
         public void FollowsLinksRelativeToResourceEvenAfterRedirect()
         {
-            _server.OnGet("/redirect").RedirectTo("/foo");
-            var body = _client.Get("/redirect").Get("foo/bar").Body;
-            Assert.That(body, Is.EqualTo("foo bar?"));
+            _server.OnGet("/redirect").RedirectTo("/foo/");
+            _server.OnGet("/foo/").RespondWith("foo!");
+            _server.OnGet("/foo/bar/baz").RespondWith("baz!");
+            var body = _client.Get("/redirect").Get("bar/baz").Body;
+            Assert.That(body, Is.EqualTo("baz!"));
+        }
+
+        [Test]
+        public void AppliesAmbientOptionsToRedirects()
+        {
+            _server.OnGet("/redirect").RedirectTo("/x");
+            _server.OnGet("/x").Respond((req, res) => res.Body = req.Headers["x-foo"]);
+            var client = new RestClient(BaseAddress, new RequestHeader("x-foo", "yippee"));
+            var body = client.Get("/redirect").Body;
+            Assert.That(body, Is.EqualTo("yippee"));
+        }
+
+        [Test]
+        public void AppliesAuthorizationHeaderToRedirects()
+        {
+            _server.OnGet("/redirect").RedirectTo("/x");
+            _server.OnGet("/x").Respond((req, res) => res.Body = req.Headers["Authorization"]);
+            var body = _client.Get("/redirect", new RequestHeader("Authorization", "yikes"),
+                new AutoRedirect { EnableAutomaticRedirection = true, ForwardAuthorizationHeader = true }).Body;
+            Assert.That(body, Is.EqualTo("yikes"));
+        }
+
+        [Test]
+        public void AppliesAuthorizationHeaderToPermanentRedirects() {
+            _server.OnGet("/redirect").Respond((req, res) => { res.StatusCode = (int)HttpStatusCode.MovedPermanently;
+                res.Headers["Location"] = "/x";
+            });
+            _server.OnGet("/x").Respond((req, res) => res.Body = req.Headers["Authorization"]);
+            var body = _client.Get("/redirect", new RequestHeader("Authorization", "crumbs"),
+                new AutoRedirect { EnableAutomaticRedirection = true, ForwardAuthorizationHeader = true }).Body;
+            Assert.That(body, Is.EqualTo("crumbs"));
+        }
+
+        [Test]
+        public void AllowsAutoRedirectToBeDisabledForSingleRequest()
+        {
+            _server.OnGet("/redirect").RedirectTo("/x");
+            var response = _client.Get("/redirect", AutoRedirect.DoNotAutoRedirect);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
+        }
+
+        [Test]
+        public void AppliesOverridingOptionsToRedirects() {
+            _server.OnGet("/redirect").RedirectTo("/x");
+            _server.OnGet("/x").Respond((req, res) => res.Body = req.Headers["x-foo"]);
+            var body = _client.Get("/redirect", new RequestHeader("x-foo", "yippee")).Body;
+            Assert.That(body, Is.EqualTo("yippee"));
         }
 
         [Test]
@@ -310,6 +360,13 @@ namespace Everest.UnitTests
         public void IsInstantiableWithStringAsUrl()
         {
             Assert.That(new RestClient("http://www.featurist.co.uk/").Url.AbsoluteUri, Is.EqualTo("http://www.featurist.co.uk/"));
+        }
+
+        [Test]
+        public void AcceptsStarSlashStarByDefault()
+        {
+            _server.OnGet("/accept").Respond((req, res) => res.Body = req.Headers["Accept"]);
+            Assert.That(new RestClient(BaseAddress).Get("/accept").Body, Is.EqualTo("*/*"));
         }
 
         private class BogusOption : PipelineOption
