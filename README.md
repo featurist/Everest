@@ -153,9 +153,17 @@ By default, Everest will automatically follow redirects. Change that behaviour w
 
     client.Post("/foos", "body", AutoRedirect.DoNotAutoRedirect)
 
-For security, authorization headers are not sent in requests following automatic redirects. This can be overridden:
+For security, Authorization headers are not sent in requests following automatic redirects. This can be overridden:
 
     client.Put("/foos/1", "body", AutoRedirect.AutoRedirectAndForwardAuthorizationHeader)
+
+#### Builder API
+
+Given a resource, the With(options) method returns a new client with overridden default options:
+
+    client = new RestClient();
+    authenticated client = client.With(new BasicAuth("user", "pass"));
+    ajax client = client.With(new RequestHeader("X-Requested-With", "ajax"));
 
 #### Everest make conservatories in the UK
 
