@@ -159,7 +159,7 @@ For security, Authorization headers are not sent in requests following automatic
 
 #### Builder API
 
-Given a resource, Resource.With(params[] options) returns a new client with overridden default options:
+Given a resource, Resource.With(params PipelineOption[] options) returns a new client with overridden default options:
 
     client = new RestClient();
     authenticated client = client.With(new BasicAuth("user", "pass"));
