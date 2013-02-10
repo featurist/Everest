@@ -126,11 +126,36 @@ An implementation of [BodyContent](Everest/Content/BodyContent) can be passed in
 
 A couple of implementations of BodyContent should come in handy:
 
-* Use [StringBodyContent](Everest/Content/StringBodyContent.cs) to sebd plain old text/plain
+* Use [StringBodyContent](Everest/Content/StringBodyContent.cs) to send plain old text/plain
     
 * [StreamBodyContent](Everest/Content/StreamBodyContent.cs) for stuff that can be streamed
 
 * [JsonBodyContent](Everest/Content/JsonBodyContent.cs) for a JSON request body
+
+#### Status Codes
+
+By default, Everest throws an exception if the response status code is in the range 400-499.
+
+You can override the acceptable response status code:
+    
+    // Create a client that doesn't usually complain about errors
+    client = new RestClient(ExpectStatus.IgnoreStatus)
+    
+    // GET request, expecting a 404
+    client.Get("foo", ExpectStatus.NotFound)
+
+    // POST request, expecting a 201
+    client.Post("foo", "body", new ExpectStatus(HttpStatusCode.Created))
+
+#### Redirection
+
+By default, Everest will automatically follow redirects. Change that behaviour with the [AutoRedirect](Everest/Redirection/AutoRedirect.cs) option:
+
+    client.Post("/foos", "body", AutoRedirect.DoNotAutoRedirect)
+
+For security, authorization headers are not sent in requests following automatic redirects. This can be overridden:
+
+    client.Put("/foos/1", "body", AutoRedirect.AutoRedirectAndForwardAuthorizationHeader)
 
 #### Everest make conservatories in the UK
 
