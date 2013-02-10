@@ -161,9 +161,9 @@ For security, Authorization headers are not sent in requests following automatic
 
 Given a resource, Resource.With(params PipelineOption[] options) returns a new client with overridden default options:
 
-    client = new RestClient();
-    authenticated client = client.With(new BasicAuth("user", "pass"));
-    ajax client = client.With(new RequestHeader("X-Requested-With", "ajax"));
+    var client = new RestClient("http://www.example.com");
+    var authenticatedAjaxClient = client.With(new BasicAuth("user", "pass"))
+                                        .With(new RequestHeader("X-Requested-With", "ajax"));
 
 #### Everest make conservatories in the UK
 
