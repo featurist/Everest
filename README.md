@@ -95,21 +95,21 @@ Pipeline options can be applied to _all_ requests by passing them to the RestCli
 
 The following pipeline options can be used to customise request/response behaviour:
 
-    [BasicAuth](Everest/Auth/BasicAuth.cs) sets the '[Authorization](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.8)' header for [HTTP Basic authentication](http://en.wikipedia.org/wiki/Basic_access_authentication)
+* [BasicAuth](Everest/Auth/BasicAuth.cs) sets the '[Authorization](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.8)' header for [HTTP Basic authentication](http://en.wikipedia.org/wiki/Basic_access_authentication)
     
-    [IfModifiedSince](Everest/Caching/IfModifiedSince.cs) sets the '[If-Modified-Since](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.25)' HTTP header
+* [IfModifiedSince](Everest/Caching/IfModifiedSince.cs) sets the '[If-Modified-Since](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.25)' HTTP header
     
-    [Accept](Everest/Headers/Accept.cs) sets the '[Accept](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1)' HTTP header
+* [Accept](Everest/Headers/Accept.cs) sets the '[Accept](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1)' HTTP header
     
-    [SetRequestHeaders](Everest/Headers/SetRequestHeaders.cs) sets arbitrary HTTP request headers.
+* [SetRequestHeaders](Everest/Headers/SetRequestHeaders.cs) sets arbitrary HTTP request headers.
     
-    [ExpectResponseHeaders](Everest/Headers/ExpectResponseHeaders.cs) throws exceptions when unexpected header values are present.
+* [ExpectResponseHeaders](Everest/Headers/ExpectResponseHeaders.cs) throws exceptions when unexpected header values are present.
     
-    [ExpectStatus](Everest/Status/ExpectStatus.cs) throws exceptions when the response status code is unexpected.
+* [ExpectStatus](Everest/Status/ExpectStatus.cs) throws exceptions when the response status code is unexpected.
     
-    [ExpectStatusInRange](Everest/Status/ExpectStatusInRange.cs) throws exceptions when the response status code is outside a range of values.
+* [ExpectStatusInRange](Everest/Status/ExpectStatusInRange.cs) throws exceptions when the response status code is outside a range of values.
     
-    [ExpectStatusNotInRange](Everest/Status/ExpectStatusNotInRange.cs) throws exceptions when the response status code is inside a range of values.
+* [ExpectStatusNotInRange](Everest/Status/ExpectStatusNotInRange.cs) throws exceptions when the response status code is inside a range of values.
 
 #### Body Content
 
