@@ -134,7 +134,7 @@ A couple of implementations of BodyContent should come in handy:
 
 #### Status Codes
 
-By default, Everest throws an exception if the response status code is in the range 400-499.
+By default, Everest throws an exception if the response status code is in the range 400-599.
 
 You can override the acceptable response status code:
     
