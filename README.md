@@ -126,9 +126,11 @@ An implementation of [BodyContent](Everest/Content/BodyContent) can be passed in
 
 A couple of implementations of BodyContent should come in handy:
 
-    [StringBodyContent](Everest/Content/StringBodyContent.cs) plain old text/plain
+* Use [StringBodyContent](Everest/Content/StringBodyContent.cs) to sebd plain old text/plain
     
-    [StreamBodyContent](Everest/Content/StreamBodyContent.cs) for stuff that can be streamed
+* [StreamBodyContent](Everest/Content/StreamBodyContent.cs) for stuff that can be streamed
+
+* [JsonBodyContent](Everest/Content/JsonBodyContent.cs) for a JSON request body
 
 #### Everest make conservatories in the UK
 
