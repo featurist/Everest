@@ -60,5 +60,10 @@ namespace Everest
         {
             get { return _headers ?? (_headers = _httpResponseMessage.AllHeadersAsStrings()); }
         }
+
+        public void Dispose()
+        {
+            _httpResponseMessage.Dispose();
+        }
     }
 }

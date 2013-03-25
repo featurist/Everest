@@ -1,16 +1,30 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
 using Everest.Pipeline;
 using Everest.Redirection;
 
-namespace Everest.SystemNetHttp {
+namespace Everest.SystemNetHttp
+{
     public class SystemNetHttpClientAdapterFactory : HttpClientAdapterFactory
     {
-        public HttpClientAdapter CreateClient(PipelineOptions options) {
-            AutoRedirect redirectOption = null;
-            options.Use<AutoRedirect>(option => {
-                redirectOption = option;
-            });
-            return new SystemNetHttpClientAdapter(redirectOption);
+        private static readonly Dictionary<AutoRedirect, HttpClientAdapter> Adapters =
+            new Dictionary<AutoRedirect, HttpClientAdapter> {
+
+                { AutoRedirect.DoNotAutoRedirect,
+                    new SystemNetHttpClientAdapter(AutoRedirect.DoNotAutoRedirect) },
+
+                { AutoRedirect.AutoRedirectAndForwardAuthorizationHeader,
+                    new SystemNetHttpClientAdapter(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader) },
+
+                { AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader,
+                    new SystemNetHttpClientAdapter(AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader) }
+            
+            };
+
+        public HttpClientAdapter CreateClient(PipelineOptions options)
+        {
+            var redirectOption = AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader;
+            options.Use<AutoRedirect>(option => { redirectOption = option; });
+            return Adapters[redirectOption];
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Everest.Pipeline;
 
-namespace Everest.UnitTests
+namespace Everest.UnitTests.Fakes
 {
     public class AlwaysThrowsOnSendingAdapter : HttpClientAdapter, HttpClientAdapterFactory
     {
@@ -14,8 +14,13 @@ namespace Everest.UnitTests
             });
         }
 
-        public HttpClientAdapter CreateClient(PipelineOptions options) {
+        public HttpClientAdapter CreateClient(PipelineOptions options)
+        {
             return new AlwaysThrowsOnSendingAdapter();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

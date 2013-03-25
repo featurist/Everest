@@ -24,13 +24,13 @@ namespace Everest.SystemNetHttp
 
         public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) {
             var response = _client.SendAsync(request).Result;
-            if (ShouldManualRedirect(response)) {
+            if (ShouldManuallyRedirect(response)) {
                 return _client.SendAsync(CreateRedirectRequest(request, response));
             }
             return Task.Factory.StartNew(() => response);
         }
 
-        private bool ShouldManualRedirect(HttpResponseMessage response) {
+        private bool ShouldManuallyRedirect(HttpResponseMessage response) {
             return (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.MovedPermanently) 
                    && AutoRedirect.AutoRedirectAndForwardAuthorizationHeader.Equals(_autoRedirect);
         }
@@ -41,6 +41,16 @@ namespace Everest.SystemNetHttp
                 newRequest.Headers.Add(header.Key, header.Value);
             }
             return newRequest;
+        }
+
+        public void Dispose()
+        {
+            _client.Dispose();
+        }
+
+        public HttpClient Client
+        {
+            get { return _client; }
         }
     }
 }

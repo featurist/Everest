@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Everest
 {
-    public interface Response : Resource
+    public interface Response : Resource, IDisposable
     {
         string Body { get; }
         byte[] BodyAsByteArray { get; }

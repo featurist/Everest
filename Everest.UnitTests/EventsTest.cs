@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Everest.Pipeline;
 using Everest.Status;
+using Everest.UnitTests.Fakes;
 using NUnit.Framework;
 using SelfishHttp;
 

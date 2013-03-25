@@ -49,11 +49,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlwaysThrowsOnSendingAdapter.cs" />
-    <Compile Include="DeliberateException.cs" />
+    <Compile Include="ConnectionLimitTest.cs" />
+    <Compile Include="Fakes\AlwaysThrowsOnSendingAdapter.cs" />
+    <Compile Include="DisposeTest.cs" />
+    <Compile Include="Fakes\DeliberateException.cs" />
     <Compile Include="EventsTest.cs" />
     <Compile Include="RestClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StressTest.cs" />
+    <Compile Include="Fakes\StubAdapterFactory.cs" />
+    <Compile Include="Fakes\TracksWhenDisposedClient.cs" />
+    <Compile Include="Fakes\TracksWhenDisposedResponseMessage.cs" />
+    <Compile Include="SystemNetAdapterTest.cs" />
+    <Compile Include="Fakes\TracksWhenDisposedMemoryStream.cs" />
     <Compile Include="WithTest.cs" />
   </ItemGroup>
   <ItemGroup>
