@@ -24,7 +24,7 @@ namespace Everest
 
         private static readonly PipelineOption[] DefaultPipelineOptions = new PipelineOption[] { new Accept("*/*") };
 
-        private static readonly HttpClientAdapterFactory _defaultAdapterFactory = new SystemNetHttpClientAdapterFactory();
+        private static readonly HttpClientAdapterFactory DefaultAdapterFactory = new SystemNetHttpClientAdapterFactory();
         private readonly HttpClientAdapterFactory _adapterFactory;
 
         private readonly IEnumerable<PipelineOption> _ambientPipelineOptions;
@@ -39,7 +39,7 @@ namespace Everest
         }
 
         public RestClient(string url, params PipelineOption[] ambientPipelineOptions)
-            : this(url == null ? null : new Uri(url), _defaultAdapterFactory, ambientPipelineOptions)
+            : this(url == null ? null : new Uri(url), DefaultAdapterFactory, ambientPipelineOptions)
         {
         }
 

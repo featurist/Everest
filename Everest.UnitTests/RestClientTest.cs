@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using Everest.Compression;
 using Everest.Content;
 using Everest.Headers;
 using Everest.Pipeline;
@@ -367,6 +368,13 @@ namespace Everest.UnitTests
         {
             _server.OnGet("/accept").Respond((req, res) => res.Body = req.Headers["Accept"]);
             Assert.That(new RestClient(BaseAddress).Get("/accept").Body, Is.EqualTo("*/*"));
+        }
+
+        [Test]
+        public void AcceptsGzipAndDeflateEncodingByDefault()
+        {
+            _server.OnGet("/accept-encoding").Respond((req, res) => { res.Body = req.Headers["Accept-Encoding"]; });
+            Assert.That(_client.Get("/accept-encoding").Body, Is.EqualTo("gzip, deflate"));
         }
 
         private class BogusOption : PipelineOption

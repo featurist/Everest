@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\StreamBodyContent.cs" />
+    <Compile Include="Compression\AcceptEncoding.cs" />
     <Compile Include="Headers\RequestHeader.cs" />
     <Compile Include="HttpClientAdapter.cs" />
     <Compile Include="Auth\AddBasicAuthHeaders.cs" />
@@ -87,9 +88,7 @@
     <Compile Include="Content\StringBodyContent.cs" />
     <Compile Include="Pipeline\UnsupportedOptionException.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="obj\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

@@ -54,6 +54,7 @@
     <Compile Include="DisposeTest.cs" />
     <Compile Include="Fakes\DeliberateException.cs" />
     <Compile Include="EventsTest.cs" />
+    <Compile Include="GzipTest.cs" />
     <Compile Include="RestClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StressTest.cs" />

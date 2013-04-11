@@ -8,22 +8,34 @@ namespace Everest.UnitTests
     [TestFixture]
     public class SystemNetAdapterTest
     {
-        [Test]
-        public void ReusesTheSameUnderlyingHttpClientUnlessAutoRedirectConfigurationChanges()
+        private SystemNetHttpClientAdapterFactory _adapterFactory;
+        
+        [SetUp]
+        public void CreateFactory()
         {
-            var adapterFactory = new SystemNetHttpClientAdapterFactory();
-            var adapter1 = (SystemNetHttpClientAdapter)adapterFactory.CreateClient(new PipelineOptions(new PipelineOption[0]));
-            var adapter2 = (SystemNetHttpClientAdapter)adapterFactory.CreateClient(new PipelineOptions(new PipelineOption[0]));
-            var adapter3 = (SystemNetHttpClientAdapter)adapterFactory.CreateClient(new PipelineOptions(new [] { AutoRedirect.DoNotAutoRedirect }));
-            var adapter4 = (SystemNetHttpClientAdapter)adapterFactory.CreateClient(new PipelineOptions(new [] { AutoRedirect.DoNotAutoRedirect }));
-            var adapter5 = (SystemNetHttpClientAdapter)adapterFactory.CreateClient(new PipelineOptions(new [] { AutoRedirect.AutoRedirectAndForwardAuthorizationHeader }));
-            var adapter6 = (SystemNetHttpClientAdapter)adapterFactory.CreateClient(new PipelineOptions(new [] { AutoRedirect.AutoRedirectAndForwardAuthorizationHeader }));
-            Assert.That(adapter1.Client, Is.SameAs(adapter2.Client));
-            Assert.That(adapter3.Client, Is.SameAs(adapter4.Client));
-            Assert.That(adapter5.Client, Is.SameAs(adapter6.Client));
-            Assert.That(adapter1.Client, Is.Not.SameAs(adapter3.Client));
-            Assert.That(adapter1.Client, Is.Not.SameAs(adapter5.Client));
-            Assert.That(adapter3.Client, Is.Not.SameAs(adapter5.Client));
+            _adapterFactory = new SystemNetHttpClientAdapterFactory();
+        }
+
+        [Test]
+        public void WhenPipelineOptionsAreIdentialThenTheSameClientIsReused()
+        {
+            var blank = CreateClient();
+            var blank2 = CreateClient();
+            var noRedirect = CreateClient(AutoRedirect.DoNotAutoRedirect);
+            var noRedirect2 = CreateClient(AutoRedirect.DoNotAutoRedirect);
+            var autoRedirect = CreateClient(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader);
+            var autoRedirect2 = CreateClient(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader);
+            Assert.That(blank.Client, Is.SameAs(blank2.Client));
+            Assert.That(noRedirect.Client, Is.SameAs(noRedirect2.Client));
+            Assert.That(autoRedirect.Client, Is.SameAs(autoRedirect2.Client));
+            Assert.That(blank.Client, Is.Not.SameAs(noRedirect.Client));
+            Assert.That(blank.Client, Is.Not.SameAs(autoRedirect.Client));
+            Assert.That(noRedirect.Client, Is.Not.SameAs(autoRedirect.Client));
+        }
+
+        private SystemNetHttpClientAdapter CreateClient(params PipelineOption[] pipelineOptions)
+        {
+            return (SystemNetHttpClientAdapter)_adapterFactory.CreateClient(new PipelineOptions(pipelineOptions));
         }
     }
 }

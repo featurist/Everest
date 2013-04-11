@@ -14,30 +14,37 @@ namespace Everest.SystemNetHttp
         public SystemNetHttpClientAdapter(AutoRedirect autoRedirect)
         {
             _autoRedirect = autoRedirect;
-            var handler = new HttpClientHandler {
+            var handler = new HttpClientHandler
+            {
                 AllowAutoRedirect = !(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader.Equals(autoRedirect) ||
-                                      AutoRedirect.DoNotAutoRedirect.Equals(autoRedirect))
+                                      AutoRedirect.DoNotAutoRedirect.Equals(autoRedirect)),
+                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
+                UseCookies = false
             };
-
             _client = new HttpClient(handler);
         }
 
-        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) {
+        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
+        {
             var response = _client.SendAsync(request).Result;
-            if (ShouldManuallyRedirect(response)) {
+            if (ShouldManuallyRedirect(response))
+            {
                 return _client.SendAsync(CreateRedirectRequest(request, response));
             }
             return Task.Factory.StartNew(() => response);
         }
 
-        private bool ShouldManuallyRedirect(HttpResponseMessage response) {
-            return (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.MovedPermanently) 
+        private bool ShouldManuallyRedirect(HttpResponseMessage response)
+        {
+            return (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.MovedPermanently)
                    && AutoRedirect.AutoRedirectAndForwardAuthorizationHeader.Equals(_autoRedirect);
         }
 
-        private static HttpRequestMessage CreateRedirectRequest(HttpRequestMessage request, HttpResponseMessage response) {
+        private static HttpRequestMessage CreateRedirectRequest(HttpRequestMessage request, HttpResponseMessage response)
+        {
             var newRequest = new HttpRequestMessage(HttpMethod.Get, new Uri(request.RequestUri, response.Headers.Location));
-            foreach (var header in request.Headers) {
+            foreach (var header in request.Headers)
+            {
                 newRequest.Headers.Add(header.Key, header.Value);
             }
             return newRequest;
