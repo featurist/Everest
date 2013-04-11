@@ -1,8 +1,10 @@
 _ReSharper.*
 *.suo
 *.sln.DotSettings
-*.sln.DotSettings.user
+*.DotSettings.user
 */obj
 */bin
 packages
 *.nupkg
+_TeamCity.*/
+*.orig
