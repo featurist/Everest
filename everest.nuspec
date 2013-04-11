@@ -2,13 +2,13 @@
 <package>
   <metadata>
     <id>Everest</id>
-    <version>0.0.32</version>
+    <version>0.0.33</version>
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
-    <releaseNotes>Allow cookie header to be set!</releaseNotes>
+    <releaseNotes>Option to allow client caching</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>
