@@ -1,4 +1,7 @@
-﻿using Everest.Pipeline;
+﻿using Everest.Caching;
+using Everest.Compression;
+using Everest.Headers;
+using Everest.Pipeline;
 using Everest.Redirection;
 using Everest.SystemNetHttp;
 using NUnit.Framework;
@@ -26,6 +29,7 @@ namespace Everest.UnitTests
             GetsTheSameClientWithPipelineOption(new CachePolicy { Cache = true });
             GetsTheSameClientWithPipelineOption(new CachePolicy { Cache = true }, AutoRedirect.DoNotAutoRedirect);
             GetsTheSameClientWithPipelineOption(new CachePolicy { Cache = true }, AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader);
+            GetsTheSameClientWithPipelineOption(new AcceptEncoding { AcceptGzipAndDeflate = true });
         }
 
         [Test]

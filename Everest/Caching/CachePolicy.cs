@@ -1,6 +1,6 @@
 ﻿using Everest.Pipeline;
 
-namespace Everest.SystemNetHttp
+namespace Everest.Caching
 {
     public struct CachePolicy : PipelineOption
     {

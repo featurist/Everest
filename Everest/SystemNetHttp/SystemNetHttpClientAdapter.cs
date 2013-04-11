@@ -19,13 +19,17 @@ namespace Everest.SystemNetHttp
             {
                 AllowAutoRedirect = !(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader.Equals(options.AutoRedirect) ||
                                       AutoRedirect.DoNotAutoRedirect.Equals(options.AutoRedirect)),
-                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
                 UseCookies = false,
             };
 
             if (options.CachePolicy.Cache)
             {
                 handler.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
+            }
+
+            if (options.AcceptEncoding.AcceptGzipAndDeflate)
+            {
+                handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
             }
 
             _client = new HttpClient(handler);

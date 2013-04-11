@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\StreamBodyContent.cs" />
-    <Compile Include="Compression\AcceptEncoding.cs" />
     <Compile Include="Headers\RequestHeader.cs" />
     <Compile Include="HttpClientAdapter.cs" />
     <Compile Include="Auth\AddBasicAuthHeaders.cs" />
@@ -58,7 +57,9 @@
     <Compile Include="RequestEventArgs.cs" />
     <Compile Include="ResponseDetails.cs" />
     <Compile Include="ResponseEventArgs.cs" />
-    <Compile Include="SystemNetHttp\CachePolicy.cs" />
+    <Compile Include="Caching\CachePolicy.cs" />
+    <Compile Include="Compression\AcceptEncoding.cs" />
+    <Compile Include="SystemNetHttp\AdapterOptions.cs" />
     <Compile Include="SystemNetHttp\HttpRequestMessageRequestDetails.cs" />
     <Compile Include="RequestDetails.cs" />
     <Compile Include="ResourceApi.cs" />

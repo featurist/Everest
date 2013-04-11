@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CachingServer.cs" />
+    <Compile Include="CachingTests.cs" />
     <Compile Include="ConnectionLimitTest.cs" />
     <Compile Include="Fakes\AlwaysThrowsOnSendingAdapter.cs" />
     <Compile Include="DisposeTest.cs" />

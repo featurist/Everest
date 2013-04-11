@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Everest.Caching;
+using Everest.Compression;
 using Everest.Pipeline;
 using Everest.Redirection;
 
@@ -14,11 +16,13 @@ namespace Everest.SystemNetHttp
             var adapterOptions = new AdapterOptions
             {
                 AutoRedirect = AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader,
-                CachePolicy = new CachePolicy {Cache = false}
+                CachePolicy = new CachePolicy {Cache = false},
+                AcceptEncoding = new AcceptEncoding {AcceptGzipAndDeflate = true}
             };
 
             options.Use<AutoRedirect>(option => { adapterOptions.AutoRedirect = option; });
             options.Use<CachePolicy>(option => { adapterOptions.CachePolicy = option; });
+            options.Use<AcceptEncoding>(option => { adapterOptions.AcceptEncoding = option; });
 
             return CreateClient(adapterOptions);
         }
@@ -32,11 +36,5 @@ namespace Everest.SystemNetHttp
             }
             return adapter;
         }
-    }
-
-    public struct AdapterOptions
-    {
-        public AutoRedirect AutoRedirect;
-        public CachePolicy CachePolicy;
     }
 }
