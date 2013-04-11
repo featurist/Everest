@@ -6,25 +6,37 @@ namespace Everest.SystemNetHttp
 {
     public class SystemNetHttpClientAdapterFactory : HttpClientAdapterFactory
     {
-        private static readonly Dictionary<AutoRedirect, HttpClientAdapter> Adapters =
-            new Dictionary<AutoRedirect, HttpClientAdapter> {
-
-                { AutoRedirect.DoNotAutoRedirect,
-                    new SystemNetHttpClientAdapter(AutoRedirect.DoNotAutoRedirect) },
-
-                { AutoRedirect.AutoRedirectAndForwardAuthorizationHeader,
-                    new SystemNetHttpClientAdapter(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader) },
-
-                { AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader,
-                    new SystemNetHttpClientAdapter(AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader) }
-            
-            };
+        private static readonly Dictionary<AdapterOptions, HttpClientAdapter> Adapters =
+            new Dictionary<AdapterOptions, HttpClientAdapter>();
 
         public HttpClientAdapter CreateClient(PipelineOptions options)
         {
-            var redirectOption = AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader;
-            options.Use<AutoRedirect>(option => { redirectOption = option; });
-            return Adapters[redirectOption];
+            var adapterOptions = new AdapterOptions
+            {
+                AutoRedirect = AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader,
+                CachePolicy = new CachePolicy {Cache = false}
+            };
+
+            options.Use<AutoRedirect>(option => { adapterOptions.AutoRedirect = option; });
+            options.Use<CachePolicy>(option => { adapterOptions.CachePolicy = option; });
+
+            return CreateClient(adapterOptions);
         }
+
+        private HttpClientAdapter CreateClient(AdapterOptions options)
+        {
+            HttpClientAdapter adapter;
+            if (!Adapters.TryGetValue(options, out adapter))
+            {
+                Adapters[options] = adapter = new SystemNetHttpClientAdapter(options);
+            }
+            return adapter;
+        }
+    }
+
+    public struct AdapterOptions
+    {
+        public AutoRedirect AutoRedirect;
+        public CachePolicy CachePolicy;
     }
 }

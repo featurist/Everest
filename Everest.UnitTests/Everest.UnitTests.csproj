@@ -36,8 +36,9 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="SelfishHttp">
-      <HintPath>..\packages\SelfishHttp.0.0.13\lib\net40\SelfishHttp.dll</HintPath>
+    <Reference Include="SelfishHttp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SelfishHttp.0.1.0\lib\net40\SelfishHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

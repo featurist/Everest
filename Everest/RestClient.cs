@@ -29,6 +29,7 @@ namespace Everest
 
         private readonly IEnumerable<PipelineOption> _ambientPipelineOptions;
 
+
         public RestClient() : this(new PipelineOption[] { })
         {
         }

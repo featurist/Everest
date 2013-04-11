@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Cache;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Everest.Redirection;
@@ -11,16 +12,22 @@ namespace Everest.SystemNetHttp
         private readonly AutoRedirect _autoRedirect;
         private readonly HttpClient _client;
 
-        public SystemNetHttpClientAdapter(AutoRedirect autoRedirect)
+        public SystemNetHttpClientAdapter(AdapterOptions options)
         {
-            _autoRedirect = autoRedirect;
-            var handler = new HttpClientHandler
+            _autoRedirect = options.AutoRedirect;
+            var handler = new WebRequestHandler
             {
-                AllowAutoRedirect = !(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader.Equals(autoRedirect) ||
-                                      AutoRedirect.DoNotAutoRedirect.Equals(autoRedirect)),
+                AllowAutoRedirect = !(AutoRedirect.AutoRedirectAndForwardAuthorizationHeader.Equals(options.AutoRedirect) ||
+                                      AutoRedirect.DoNotAutoRedirect.Equals(options.AutoRedirect)),
                 AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
-                UseCookies = false
+                UseCookies = false,
             };
+
+            if (options.CachePolicy.Cache)
+            {
+                handler.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
+            }
+
             _client = new HttpClient(handler);
         }
 
