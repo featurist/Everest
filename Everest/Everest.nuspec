@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package>
+<package >
   <metadata>
     <id>Everest</id>
-    <version>0.0.32</version>
+    <version>$version$</version>
     <authors>Josh Chisholm</authors>
     <owners>Josh Chisholm</owners>
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
@@ -12,8 +12,4 @@
     <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>
-  <files>
-    <file src="Everest\bin\Debug\Everest.dll" target="lib\net40" />
-	  <file src="Everest\bin\Debug\Everest.pdb" target="lib\net40" />
-  </files>
 </package>
