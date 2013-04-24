@@ -90,8 +90,11 @@
     <Compile Include="Content\StringBodyContent.cs" />
     <Compile Include="Pipeline\UnsupportedOptionException.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Content Include="Nuget - usage.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Everest.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
