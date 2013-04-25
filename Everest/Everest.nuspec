@@ -8,7 +8,7 @@
     <projectUrl>https://github.com/featurist/Everest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Resource-oriented HTTP client</description>
-    <releaseNotes>Allow cookie header to be set!</releaseNotes>
+    <releaseNotes>Add content headers</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>http</tags>
   </metadata>
