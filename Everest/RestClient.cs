@@ -113,10 +113,9 @@ namespace Everest
             if (body != null)
             {
                 var content = new StreamContent(body.AsStream());
-                if (body.MediaType != null)
-                {
-                    content.Headers.ContentType = new MediaTypeHeaderValue(body.MediaType);
-                }
+                foreach (var header in body.Headers)
+                    content.Headers.Add(header.Key, header.Value);
+
                 request.Content = content;
             }
             request.RequestUri = absoluteUri;

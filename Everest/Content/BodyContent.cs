@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Everest.Content
 {
@@ -6,5 +8,6 @@ namespace Everest.Content
     {
         Stream AsStream();
         string MediaType { get; }
+        IDictionary<string, string> Headers { get; }
     }
 }

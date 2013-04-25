@@ -377,6 +377,20 @@ namespace Everest.UnitTests
             Assert.That(_client.Get("/accept-encoding").Body, Is.EqualTo("gzip, deflate"));
         }
 
+        [Test]
+        public void AddsContentHeadersToContent()
+        {
+            _server.OnPut("/testput").AddHandler((context, next) =>
+                {
+                    Assert.That(context.Request.Headers["content-encoding"], Is.EqualTo("gzip"));
+                    next();
+                });
+
+            var content = new StreamBodyContent(new MemoryStream(Encoding.UTF8.GetBytes("Test")), "text/plain");
+            content.Headers.Add("Content-Encoding", "gzip");
+            _client.Put("/testput", content);
+        }
+
         private class BogusOption : PipelineOption
         {
         }
