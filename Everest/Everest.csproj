@@ -39,10 +39,12 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\WwwFormUrlEncodedContent.cs" />
     <Compile Include="Content\StreamBodyContent.cs" />
     <Compile Include="Headers\RequestHeader.cs" />
     <Compile Include="HttpClientAdapter.cs" />
@@ -91,8 +93,11 @@
     <Compile Include="Content\StringBodyContent.cs" />
     <Compile Include="Pipeline\UnsupportedOptionException.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Content Include="Nuget - usage.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Everest.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
