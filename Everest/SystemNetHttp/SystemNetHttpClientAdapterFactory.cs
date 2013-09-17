@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Everest.Caching;
 using Everest.Compression;
 using Everest.Pipeline;
@@ -8,8 +9,8 @@ namespace Everest.SystemNetHttp
 {
     public class SystemNetHttpClientAdapterFactory : HttpClientAdapterFactory
     {
-        private static readonly Dictionary<AdapterOptions, HttpClientAdapter> Adapters =
-            new Dictionary<AdapterOptions, HttpClientAdapter>();
+        private static readonly ConcurrentDictionary<AdapterOptions, HttpClientAdapter> Adapters =
+            new ConcurrentDictionary<AdapterOptions, HttpClientAdapter>();
 
         public HttpClientAdapter CreateClient(PipelineOptions options)
         {
