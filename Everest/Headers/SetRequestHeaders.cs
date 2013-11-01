@@ -6,9 +6,9 @@ namespace Everest.Headers
 {
     public class SetRequestHeaders : PipelineOption, IEnumerable<KeyValuePair<string, string>>
     {
-        private readonly IDictionary<string, string> _headers = new Dictionary<string, string>();
+        private readonly IEnumerable<KeyValuePair<string, string>> _headers = new Dictionary<string, string>();
 
-        public SetRequestHeaders(IDictionary<string, string> headers)
+        public SetRequestHeaders(IEnumerable<KeyValuePair<string, string>> headers)
         {
             _headers = headers;
         }

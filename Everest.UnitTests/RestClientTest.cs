@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
-using Everest.Compression;
 using Everest.Content;
 using Everest.Headers;
 using Everest.Pipeline;
@@ -257,6 +259,41 @@ namespace Everest.UnitTests
             var client = new RestClient(BaseAddress);
             var response = client.Get("/accept", new Accept("foo/bar"));
             Assert.That(response.Body, Is.EqualTo("foo/bar"));
+        }
+
+        [Test]
+        public void CanComputeHeadersDynamically()
+        {
+            var i = 0;
+            var dynamicRequestHeaders = new DynamicRequestHeaders(
+                () => new Dictionary<string, string> { { "X", (++i).ToString(CultureInfo.InvariantCulture) } });
+
+            _server.OnGet("/X").Respond((req, res) => res.Body = req.Headers["X"]);
+            var client = new RestClient(BaseAddress, new SetRequestHeaders(dynamicRequestHeaders));
+ 
+            var response = client.Get("/X");
+            Assert.That(response.Body, Is.EqualTo("1"));
+            Assert.That(response.Body, Is.EqualTo("2"));
+        }
+
+        class DynamicRequestHeaders : IEnumerable<KeyValuePair<string, string>>
+        {
+            private readonly Func<Dictionary<string, string>> _func;
+
+            public DynamicRequestHeaders(Func<Dictionary<string, string>> func)
+            {
+                _func = func;
+            }
+
+            public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+            {
+                return _func().GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
         }
 
         [Test]
