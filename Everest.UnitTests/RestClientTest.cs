@@ -271,9 +271,8 @@ namespace Everest.UnitTests
             _server.OnGet("/X").Respond((req, res) => res.Body = req.Headers["X"]);
             var client = new RestClient(BaseAddress, new SetRequestHeaders(dynamicRequestHeaders));
  
-            var response = client.Get("/X");
-            Assert.That(response.Body, Is.EqualTo("1"));
-            Assert.That(response.Body, Is.EqualTo("2"));
+            Assert.That(client.Get("/X").Body, Is.EqualTo("1"));
+            Assert.That(client.Get("/X").Body, Is.EqualTo("2"));
         }
 
         class DynamicRequestHeaders : IEnumerable<KeyValuePair<string, string>>
