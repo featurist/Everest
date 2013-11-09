@@ -262,6 +262,18 @@ namespace Everest.UnitTests
         }
 
         [Test]
+        public void CanComputeHeaders()
+        {
+            var i = 0;
+            _server.OnGet("/X").Respond((req, res) => res.Body = req.Headers["X"]);
+            var client = new RestClient(BaseAddress, new ComputeRequestHeaders(() => new Dictionary<string, string>()
+                {{"X",(++i).ToString()}}));
+
+            var response = client.Get("/X");
+            Assert.That(response.Body, Is.EqualTo("1"));
+        }
+
+        [Test]
         public void CanComputeHeadersDynamically()
         {
             var i = 0;

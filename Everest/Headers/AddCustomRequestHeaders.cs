@@ -10,9 +10,10 @@ namespace Everest.Headers
         public void ApplyToRequest(HttpRequestMessage request, PipelineOptions pipelineOptions)
         {
             pipelineOptions.UseAll<SetRequestHeaders>(options => AddRequestHeaders(request, options));
+            pipelineOptions.UseAll<ComputeRequestHeaders>(options => AddRequestHeaders(request, options));
         }
 
-        private static void AddRequestHeaders(HttpRequestMessage request, IEnumerable<SetRequestHeaders> options)
+        private static void AddRequestHeaders(HttpRequestMessage request, IEnumerable<IEnumerable<KeyValuePair<string,string>>> options)
         {
             var mergedHeaders = new Dictionary<string, string>();
             foreach (var header in options.SelectMany(option => option))
