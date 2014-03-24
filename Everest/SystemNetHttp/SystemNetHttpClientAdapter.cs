@@ -33,6 +33,11 @@ namespace Everest.SystemNetHttp
             }
 
             _client = new HttpClient(handler);
+
+            if (options.Timeout != null)
+            {
+                _client.Timeout = options.Timeout.TimeSpan;
+            }
         }
 
         public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)

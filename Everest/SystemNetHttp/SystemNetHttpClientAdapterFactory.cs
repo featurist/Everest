@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Everest.Caching;
 using Everest.Compression;
 using Everest.Pipeline;
 using Everest.Redirection;
+using Everest.Timing;
 
 namespace Everest.SystemNetHttp
 {
@@ -24,6 +24,7 @@ namespace Everest.SystemNetHttp
             options.Use<AutoRedirect>(option => { adapterOptions.AutoRedirect = option; });
             options.Use<CachePolicy>(option => { adapterOptions.CachePolicy = option; });
             options.Use<AcceptEncoding>(option => { adapterOptions.AcceptEncoding = option; });
+            options.Use<RequestTimeout>(option => adapterOptions.Timeout = option );
 
             return CreateClient(adapterOptions);
         }

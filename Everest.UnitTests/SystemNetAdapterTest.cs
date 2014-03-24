@@ -1,9 +1,10 @@
-﻿using Everest.Caching;
+﻿using System;
+using Everest.Caching;
 using Everest.Compression;
-using Everest.Headers;
 using Everest.Pipeline;
 using Everest.Redirection;
 using Everest.SystemNetHttp;
+using Everest.Timing;
 using NUnit.Framework;
 
 namespace Everest.UnitTests
@@ -17,6 +18,14 @@ namespace Everest.UnitTests
         public void CreateFactory()
         {
             _adapterFactory = new SystemNetHttpClientAdapterFactory();
+        }
+
+        [Test]
+        public void PassesTheTimeoutOptionToTheUnderlyingClient()
+        {
+            var timeSpan = TimeSpan.FromDays(123);
+            var adapter = CreateAdapter(new RequestTimeout(timeSpan));
+            Assert.That(adapter.Client.Timeout, Is.EqualTo(timeSpan));
         }
 
         [Test]
