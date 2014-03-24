@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Everest.Auth;
 using Everest.Content;
 using Everest.Headers;
@@ -22,7 +22,7 @@ namespace Everest
                                                           new EnsureAcceptableResponseHeaders()
                                                       };
 
-        private static readonly PipelineOption[] DefaultPipelineOptions = new PipelineOption[] { new Accept("*/*") };
+        private static readonly PipelineOption[] DefaultPipelineOptions = { new Accept("*/*") };
 
         private static readonly HttpClientAdapterFactory DefaultAdapterFactory = new SystemNetHttpClientAdapterFactory();
         private readonly HttpClientAdapterFactory _adapterFactory;
@@ -91,6 +91,10 @@ namespace Everest
                 {
                     requestDetails = requestDetails ?? new HttpRequestMessageRequestDetails(request);
                     SendError(this, new RequestErrorEventArgs(requestDetails, exception.InnerException));
+                }
+                if (exception.InnerException is TaskCanceledException)
+                {
+                    throw new TimeoutException("The request timed out");
                 }
                 throw exception.InnerException;
             }
