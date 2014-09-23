@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using Everest.Headers;
@@ -26,6 +27,11 @@ namespace Everest
         public byte[] BodyAsByteArray
         {
             get { return _httpResponseMessage.Content.ReadAsByteArrayAsync().Result; }
+        }
+
+        public Stream BodyAsStream
+        {
+            get { return _httpResponseMessage.Content.ReadAsStreamAsync().Result; }
         }
 
         public string ContentType

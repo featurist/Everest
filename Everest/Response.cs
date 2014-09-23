@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 
 namespace Everest
@@ -8,6 +9,7 @@ namespace Everest
     {
         string Body { get; }
         byte[] BodyAsByteArray { get; }
+        Stream BodyAsStream { get; }
         string ContentType { get; }
         HttpStatusCode StatusCode { get; }
         DateTimeOffset? LastModified { get; }
