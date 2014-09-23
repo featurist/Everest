@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="CachingServer.cs" />
     <Compile Include="CachingTests.cs" />
+    <Compile Include="BinaryContentTest.cs" />
     <Compile Include="TimeoutTest.cs" />
     <Compile Include="WwwFormUrlEncodedContentTests.cs" />
     <Compile Include="ConnectionLimitTest.cs" />
