@@ -2,6 +2,7 @@
 using Everest.Caching;
 using Everest.Compression;
 using Everest.Pipeline;
+using Everest.Proxy;
 using Everest.Redirection;
 using Everest.Timing;
 
@@ -18,13 +19,15 @@ namespace Everest.SystemNetHttp
             {
                 AutoRedirect = AutoRedirect.AutoRedirectButDoNotForwardAuthorizationHeader,
                 CachePolicy = new CachePolicy {Cache = false},
-                AcceptEncoding = new AcceptEncoding {AcceptGzipAndDeflate = true}
+                AcceptEncoding = new AcceptEncoding {AcceptGzipAndDeflate = true},
+                WebProxy = null
             };
 
             options.Use<AutoRedirect>(option => { adapterOptions.AutoRedirect = option; });
             options.Use<CachePolicy>(option => { adapterOptions.CachePolicy = option; });
             options.Use<AcceptEncoding>(option => { adapterOptions.AcceptEncoding = option; });
             options.Use<RequestTimeout>(option => adapterOptions.Timeout = option );
+            options.Use<WebProxy>(option => adapterOptions.WebProxy = option );
 
             return CreateClient(adapterOptions);
         }
