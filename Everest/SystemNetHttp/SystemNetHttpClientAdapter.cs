@@ -32,6 +32,11 @@ namespace Everest.SystemNetHttp
                 handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
             }
 
+            if (options.WebProxy != null)
+            {
+                handler.Proxy = options.WebProxy.Proxy;
+            }
+
             _client = new HttpClient(handler);
 
             if (options.Timeout != null)

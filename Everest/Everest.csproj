@@ -93,6 +93,8 @@
     <Compile Include="Status\StatusAcceptability.cs" />
     <Compile Include="Content\StringBodyContent.cs" />
     <Compile Include="Pipeline\UnsupportedOptionException.cs" />
+    <Compile Include="Proxy\WebProxy.cs" />
+    <Compile Include="Proxy\IWebProxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Nuget - usage.txt" />
